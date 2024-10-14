@@ -1,7 +1,7 @@
 /* Custom background color for the navbar */
 .custom-navbar {
    
-    height: 50px;
+    height: 55px;
   }
   
   /* Spacer to push links and buttons to the right */
@@ -9,20 +9,67 @@
     flex: 1 1 auto;
   }
   
-  /* Custom styling for buttons */
-  button.mat-button {
-    color: white;
-    font-size: 1rem;
-  }
-  
-  button.auth-button {
-    margin-left: 2px;
-  }
-  
   .navbar-logo {
     height: 50px; 
     width: auto;
     margin-right: 20px;
   }
+
+  .custom-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px; /* Adjust padding as needed */
+  }
+  
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+  }
+  
+  .nav-buttons button {
+    margin: 0 8px; /* Add spacing between buttons */
+  }
+  
+  
+  
+  /* Media query for responsiveness */
+  @media (max-width: 600px) {
+    .navbar-logo {
+      height: 30px; /* Smaller logo on mobile */
+    }
+  
+    .nav-buttons {
+      flex-direction: column; /* Stack buttons vertically on small screens */
+      align-items: flex-start; /* Align buttons to the start */
+    }
+  }
+
+
+
+  /* navbar.component.css */
+
+.mat-menu-panel {
+  pointer-events: auto; /* Allow interactions with the menu */
+}
+
+.mat-menu-trigger:hover + .mat-menu-panel {
+  display: block; /* Keep the menu displayed when hovering over the trigger */
+}
+
+/* Optional: If you want to add a slight transition effect */
+.mat-menu-panel {
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mat-menu-panel.mat-menu-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+  
   
   

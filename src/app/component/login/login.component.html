@@ -1,0 +1,48 @@
+<div class="container p-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow p-2 bg-body rounded">
+                <div class="text-center fs-4">Login Page</div>
+                <div *ngIf="errorMessage" class="text-center text-danger">{{ errorMessage }}</div>
+                
+                <div class="card-body">
+                    <form (ngSubmit)="login()" #loginForm="ngForm">
+                        
+                        <div class="mb-3">
+                            <input 
+                                type="email" 
+                                name="username" 
+                                class="form-control" 
+                                required 
+                                [(ngModel)]="email" 
+                                #emailInput="ngModel"
+                                placeholder="Enter Email"
+                                email>
+                            <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
+                                Please enter a valid email address.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input 
+                                type="password" 
+                                name="password" 
+                                class="form-control" 
+                                required 
+                                [(ngModel)]="password" 
+                                placeholder="Enter Password">
+                        </div>
+                        
+                        <button class="btn btn-primary col-md-12" [disabled]="loginForm.invalid">Login</button>
+                        
+                    </form>
+                </div>
+                <div class="text-center">
+                    <p class="fs-6">
+                        Don't have an account? <a href="register" class="text-decoration-none">Register</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

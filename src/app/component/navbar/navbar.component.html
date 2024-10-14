@@ -1,16 +1,53 @@
 <mat-toolbar class="custom-navbar" color="primary">
-    <img src="../assets/jayabilas.png" alt="MyBrand Logo" class="navbar-logo">
-  
-   
-  
-    <button mat-button routerLink="/">Home</button>
-    <button mat-button routerLink="/features">Bus</button>
-    <button mat-button routerLink="/pricing">Book Ticket</button>
-    
-    <span class="spacer"></span>
-  
-    <!-- Sign In and Sign Up buttons on the right side -->
-    <button mat-button routerLink="/signin" class="auth-button">Register</button>
-    <button mat-raised-button color="accent" routerLink="/signup" class="auth-button">Login</button>
-  </mat-toolbar>
-  
+  <img src="jayabilas.png" class="navbar-logo">
+
+  <!-- Public View: When Not Logged In -->
+  <button *ngIf="!isLoggedIn" mat-button routerLink="/">Home</button>
+  <button *ngIf="!isLoggedIn" mat-button routerLink="/bus">Bus</button>
+  <button *ngIf="!isLoggedIn" mat-button routerLink="/pricing">Book Ticket</button>
+
+  <!-- User View: When Logged In as Regular User -->
+  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/user-home">Home</button>
+  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/bus">Search Bus</button>
+  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/pricing">Book Ticket</button>
+  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/view-tickets">View Ticket</button>
+
+  <!-- Admin View: When Logged In as Admin -->
+  <button *ngIf="isLoggedIn && isAdmin" mat-button routerLink="/admin-home">Home</button>
+  <button
+    *ngIf="isLoggedIn && isAdmin"
+    mat-button
+    [matMenuTriggerFor]="addMenu"
+    matTooltip="Add items"
+    aria-label="Add items dropdown"
+  >
+    Add
+  </button>
+  <mat-menu #addMenu="matMenu">
+    <button mat-menu-item routerLink="/add-driver">Add Driver</button>
+    <button mat-menu-item routerLink="/add-conductor">Add Conductor</button>
+    <button mat-menu-item routerLink="/add-bus">Add Bus</button>
+  </mat-menu>
+
+  <button
+    *ngIf="isLoggedIn && isAdmin"
+    mat-button
+    [matMenuTriggerFor]="viewMenu"
+    matTooltip="View items"
+    aria-label="View items dropdown"
+  >
+    View
+  </button>
+  <mat-menu #viewMenu="matMenu">
+    <button mat-menu-item routerLink="/view-drivers">View Driver</button>
+    <button mat-menu-item routerLink="/view-conductors">View Conductor</button>
+    <button mat-menu-item routerLink="/view-buses">View Bus</button>
+    <button mat-menu-item routerLink="/view-tickets">View Ticket</button>
+  </mat-menu>
+
+  <span class="spacer"></span>
+
+  <!-- Authentication Buttons -->
+  <button *ngIf="!isLoggedIn" mat-button  routerLink="/login" class="auth-button">Login</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="logout()" class="auth-button">Logout</button>
+</mat-toolbar>
