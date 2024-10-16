@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -35,10 +36,10 @@ public class Bus {
     
     private int ticketPrice;
 
-    @OneToOne
+    @ManyToOne
     private Driver driver;
 
-    @OneToOne
+    @ManyToOne
     private Conductor conductor;
 
     public int getId() {

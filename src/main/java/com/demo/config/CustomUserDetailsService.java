@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.demo.entity.User;
+import com.demo.repository.ConductorRepository;
 import com.demo.repository.UserRepository;
 
 @Service
@@ -19,17 +20,26 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ConductorRepository conductorRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	Optional<User> optionalUser = userRepository.findByEmail(username);
-    	// If user is not found, throw exception
+        Optional<User> optionalUser = userRepository.findByEmail(username);
+
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
 
-        // Convert User entity to Spring Security's UserDetails object
+        // Check if the user is a conductor by looking for them in the Conductor entity
+        boolean isConductor = conductorRepository.existsByUser(user);
+
+        // Get authorities (e.g., ROLE_CONDUCTOR) based on whether the user is a conductor or not
+        String role = isConductor ? "ROLE_CONDUCTOR" : user.getRole();
+
+        // Return UserDetails object with appropriate role
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(user.getRole())
+                .authorities(role)
                 .build();
     }
 }

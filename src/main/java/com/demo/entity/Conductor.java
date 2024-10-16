@@ -4,19 +4,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Conductor {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-	private String name;
-	
-	private String phoneno;
-	
-	private String salary;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;  // Conductor has user credentials//conductor also a user
+
+    private double salary;
 
 	public int getId() {
 		return id;
@@ -26,32 +29,21 @@ public class Conductor {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public User getUser() {
+		return user;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public String getPhoneno() {
-		return phoneno;
-	}
-
-	public void setPhoneno(String phoneno) {
-		this.phoneno = phoneno;
-	}
-
-	public String getSalary() {
+	public double getSalary() {
 		return salary;
 	}
 
-	public void setSalary(String salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 
-	@Override
-	public String toString() {
-		return "Conductor [id=" + id + ", name=" + name + ", phoneno=" + phoneno + ", salary=" + salary + "]";
-	}
+
 }

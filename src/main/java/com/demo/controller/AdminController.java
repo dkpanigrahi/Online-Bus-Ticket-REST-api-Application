@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.dto.ConductorRegisterRequest;
 import com.demo.dto.DriverRegisterRequest;
+import com.demo.dto.RegisterRequest;
 import com.demo.dto.UserResponse;
 import com.demo.entity.Bus;
 import com.demo.entity.Conductor;
@@ -37,6 +39,7 @@ import com.demo.repository.DriverRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import com.demo.service.BusService;
+import com.demo.service.ConductorService;
 import com.demo.service.TicketService;
 import com.demo.service.UserService;
 
@@ -69,6 +72,9 @@ public class AdminController {
 	
 	@Autowired
     private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private ConductorService conductorService;
 
 	@GetMapping("/dashboard")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -121,15 +127,39 @@ public class AdminController {
 
 	
 	@PostMapping("/saveConductor")
-	public ResponseEntity<Driver> createConductor(@RequestBody Conductor conductor)
-	{
-		try {
-		  conductorRepo.save(conductor);
-		  return new ResponseEntity<>(HttpStatus.CREATED);
-		}catch(Exception e){
-		  return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<Map<String, String>> createConductor(
+	    @Valid @RequestBody ConductorRegisterRequest registerRequest, BindingResult result) {
+		
+	    Map<String, String> response = new HashMap<>();
+
+	    if (result.hasErrors()) {
+	        result.getFieldErrors().forEach(error -> {
+	            response.put(error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(response);
+	    }
+
+	    try {
+	        if (userService.existsByEmail(registerRequest.getEmail())) {
+	            response.put("error", "Email is already taken");
+	            return ResponseEntity.badRequest().body(response);
+	        }
+	        if (userService.existsByPhoneNo(registerRequest.getPhoneNo())) {
+	            response.put("error", "Phone number is already taken");
+	            return ResponseEntity.badRequest().body(response);
+	        }
+
+	        // Save conductor using the service
+	        conductorService.addConductor(registerRequest);
+
+	        response.put("message", "Conductor registered successfully");
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        response.put("error", "Registration failed: " + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	    }
 	}
+
 	
 	@GetMapping("/getDriver")
 	public ResponseEntity<?> getAllDriver()
