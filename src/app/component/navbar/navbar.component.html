@@ -48,6 +48,6 @@
   <span class="spacer"></span>
 
   <!-- Authentication Buttons -->
-  <button *ngIf="!isLoggedIn" mat-button  routerLink="/login" class="auth-button">Login</button>
+  <button *ngIf="!isLoggedIn" mat-raised-button  routerLink="/login" class="auth-button">Login</button>
   <button *ngIf="isLoggedIn" mat-button (click)="logout()" class="auth-button">Logout</button>
 </mat-toolbar>

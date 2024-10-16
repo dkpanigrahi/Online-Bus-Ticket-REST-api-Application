@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthserviceService, RegisterRequest } from '../../../services/authservice.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css'] // Corrected styleUrls
 })
 export class RegisterComponent {
   
   registerForm: FormGroup;
   message: string = '';
-  error: string = '';
+  errorMessages: { [key: string]: string } = {};
 
   constructor(private fb: FormBuilder, private userService: AuthserviceService) {
     this.registerForm = this.fb.group({
@@ -33,10 +33,10 @@ export class RegisterComponent {
       this.userService.registerUser(registerData).subscribe({
         next: (response) => {
           this.message = response.message;
-          this.error = '';
+          this.errorMessages = {};
         },
         error: (err) => {
-          this.error = err.error.error;
+          this.errorMessages = err.error;
           this.message = '';
         },
       });

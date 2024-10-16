@@ -5,6 +5,8 @@ import { PublicHomeComponent } from './component/public-home/public-home.compone
 import { UserHomeComponent } from './component/user-home/user-home.component';
 import { AdminHomeComponent } from './component/admin-home/admin-home.component';
 import { authGuard } from '../services/auth.guard';
+import { AddDriverComponent } from './component/add-driver/add-driver.component';
+import { AddConductorComponent } from './component/add-conductor/add-conductor.component';
 
 export const routes: Routes = [
     {
@@ -35,5 +37,16 @@ export const routes: Routes = [
         canActivate: [authGuard], // Protect this route
         data: { role: 'ROLE_ADMIN' } // Specify the required role
       },
-      
+      {
+        path: 'add-driver',
+        component: AddDriverComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' } 
+      },
+      {
+        path: 'add-conductor',
+        component: AddConductorComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
 ];
