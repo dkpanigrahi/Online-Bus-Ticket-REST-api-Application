@@ -6,6 +6,8 @@ import com.demo.entity.User;
 import com.demo.security.JwtHelper;
 import com.demo.service.UserService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -35,18 +38,25 @@ public class AuthController {
     private JwtHelper jwtHelper;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
         Map<String, String> response = new HashMap<>();
+        
+        if (result.hasErrors()) {
+            result.getFieldErrors().forEach(error -> {
+                response.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(response);
+        }
+
         try {
             if (userService.existsByEmail(registerRequest.getEmail())) {
                 response.put("error", "Email is already taken");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+                return ResponseEntity.badRequest().body(response);
+            }           
             if (userService.existsByPhoneNo(registerRequest.getPhoneno())) {
                 response.put("error", "Phone number is already taken");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.badRequest().body(response);
             }
-
             User user = new User();
             user.setName(registerRequest.getName());
             user.setEmail(registerRequest.getEmail());
@@ -59,7 +69,7 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("error", "Registration failed: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

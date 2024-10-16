@@ -6,12 +6,17 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.dto.DriverRegisterRequest;
+import com.demo.dto.UserResponse;
 import com.demo.entity.Bus;
 import com.demo.entity.Conductor;
 import com.demo.entity.Driver;
 import com.demo.entity.Ticket;
+import com.demo.entity.User;
 import com.demo.repository.BusRepository;
 import com.demo.repository.ConductorRepository;
 import com.demo.repository.DriverRepository;
@@ -30,6 +38,9 @@ import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import com.demo.service.BusService;
 import com.demo.service.TicketService;
+import com.demo.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -48,6 +59,9 @@ public class AdminController {
 	private BusService busService;
 	
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private TicketService ticketService;
 	
 	@Autowired
@@ -57,21 +71,54 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> getAdminDashboard() {
-        return ResponseEntity.ok("Admin Dashboard");
-    }
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getAdminDashboard() {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String userName = authentication.getName();
+	    Optional<User> user = userService.findByEmail(userName);
+
+	    if (user.isPresent()) {
+	        UserResponse userResponseDTO = new UserResponse();
+	        userResponseDTO.setName(user.get().getName());
+	        userResponseDTO.setEmail(user.get().getEmail());
+	        userResponseDTO.setRole(user.get().getRole());
+	        userResponseDTO.setPhoneNo(user.get().getPhoneno());
+
+	        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+	    }
+	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
 	
 	@PostMapping("/saveDriver")
-	public ResponseEntity<Driver> createDriver(@RequestBody Driver driver)
-	{
-		try {
-		  driverRepo.save(driver);
-		  return new ResponseEntity<>(HttpStatus.CREATED);
-		}catch(Exception e){
-		  return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<?> createDriver(@Valid @RequestBody DriverRegisterRequest driverRequest, BindingResult result) {
+		Map<String, String> errorResponse = new HashMap<>();
+		if (result.hasErrors()) {
+            result.getFieldErrors().forEach(error -> {
+                errorResponse.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+
+
+	    // Check if the phone number is already used by another driver
+	    Optional<Driver> existingDriver = driverRepo.findByPhoneno(driverRequest.getPhoneno());
+	    if (existingDriver.isPresent()) {
+	        errorResponse.put("phoneno", "Phone number already exists for another driver");
+	        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+	    }
+
+	    Driver driver = new Driver();
+	    driver.setName(driverRequest.getName());
+	    driver.setPhoneno(driverRequest.getPhoneno());
+	    driver.setSalary(driverRequest.getSalary());
+
+	    driverRepo.save(driver);
+
+	    return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+
+
 	
 	@PostMapping("/saveConductor")
 	public ResponseEntity<Driver> createConductor(@RequestBody Conductor conductor)
