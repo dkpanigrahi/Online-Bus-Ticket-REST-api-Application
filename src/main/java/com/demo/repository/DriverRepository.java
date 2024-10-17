@@ -8,5 +8,7 @@ import com.demo.entity.Driver;
 
 public interface DriverRepository extends JpaRepository<Driver, Integer> {
 
-	Optional<Driver> findByPhoneno(String phoneNo);
+	Optional<Driver> findByPhoneNo(String phoneNo);
+
+	Optional<Driver> findById(int driverId);
 }

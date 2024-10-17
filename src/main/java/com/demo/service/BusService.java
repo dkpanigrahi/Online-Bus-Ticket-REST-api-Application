@@ -8,54 +8,47 @@ import org.springframework.stereotype.Service;
 import com.demo.entity.Bus;
 import com.demo.repository.BusRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class BusService {
 
-	@Autowired
-	private BusRepository busRepository;
-	
-	
-	public Bus savebus(Bus bus) {
-		
-		return busRepository.save(bus);
-	}
+    @Autowired
+    private BusRepository busRepository;
 
-	
+    public void saveBus(Bus bus) {
+		busRepository.save(bus);		
+	}
+   
     public Bus getBusById(int busId) {
         return busRepository.findById(busId).orElse(null);
     }
 
-	
-	public List<Bus> findBus(String startp, String destp) {
-		List<Bus> buslist = busRepository.findByStartPlaceAndDestination(startp, destp);
-		return buslist;
-	}
+    // Find buses by start and destination places
+    public List<Bus> findBus(String startPlace, String destination) {
+        return busRepository.findByStartPlaceAndDestination(startPlace, destination);
+    }
 
+   
+    public Bus updateBus(Bus bus) {
+        return busRepository.save(bus);
+    }
 
-	public Bus updatebus(Bus bus) {
-		
-		return busRepository.save(bus);
-	}
+    public List<Bus> getAllBuses() {
+        return busRepository.findAll();
+    }
 
-	
-    @Transactional
-    public void deleteBusById(int id) {
-        busRepository.deleteById(id);
+    // Find buses by date and day of the week
+    public List<Bus> findBusByDate(String startPlace, String destination, String dayOfWeek) {
+        return busRepository.findBusByDate(startPlace, destination, dayOfWeek);
+    }
+
+    public boolean isDriverAssignedToAnotherBus(int driverId) {
+        return busRepository.existsByDriverId(driverId);
+    }
+
+    public boolean isConductorAssignedToAnotherBus(int conductorId) {
+       
+        return busRepository.existsByConductorId(conductorId);
     }
 
 	
-	public List<Bus> getAllBus() {
-		
-		List<Bus> buslist = busRepository.findAll();
-		return buslist;
-	}
-
-	public List<Bus> findBusByDate(String startPlace, String destination, String dayOfWeek) {
-		
-		return busRepository.findBusByDate(startPlace, destination, dayOfWeek);		
-	}
-
-
 }

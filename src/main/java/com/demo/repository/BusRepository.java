@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.demo.dto.BusDto;
 import com.demo.entity.Bus;
 
 public interface BusRepository extends JpaRepository<Bus, Integer>  {
@@ -15,5 +16,8 @@ public interface BusRepository extends JpaRepository<Bus, Integer>  {
 	@Query("SELECT b FROM Bus b WHERE b.startPlace = ?1 AND b.destination = ?2 AND (b.availableEveryDay = true OR ?3 MEMBER OF b.specificDays)")
     List<Bus> findBusByDate(String startPlace, String destination, String dayOfWeek);
 	
+	boolean existsByDriverId(int driverId);
+    
+	boolean existsByConductorId(int conductorId);
 	
 }

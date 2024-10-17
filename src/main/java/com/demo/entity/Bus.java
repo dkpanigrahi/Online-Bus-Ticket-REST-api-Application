@@ -25,7 +25,7 @@ public class Bus {
     
     private String destination;
     
-    private LocalTime departureTime;
+    private String departureTime;
     
     private boolean availableEveryDay;
 
@@ -76,14 +76,10 @@ public class Bus {
 
    
     public String getDepartureTime() {
-        if (departureTime != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-            return departureTime.format(formatter);
-        }
-        return null;
+        return this.getDepartureTime();
     }
 
-    public void setDepartureTime(LocalTime departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 

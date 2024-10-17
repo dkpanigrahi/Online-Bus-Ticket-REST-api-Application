@@ -14,7 +14,7 @@ public class Driver {
 	
 	private String name;
 	
-	private String phoneno;
+	private String phoneNo;
 	
 	private String salary;
 
@@ -35,11 +35,11 @@ public class Driver {
 	}
 
 	public String getPhoneno() {
-		return phoneno;
+		return phoneNo;
 	}
 
 	public void setPhoneno(String phoneno) {
-		this.phoneno = phoneno;
+		this.phoneNo = phoneno;
 	}
 
 	public String getSalary() {
@@ -48,11 +48,6 @@ public class Driver {
 
 	public void setSalary(String salary) {
 		this.salary = salary;
-	}
-
-	@Override
-	public String toString() {
-		return "Driver [id=" + id + ", name=" + name + ", phoneno=" + phoneno + ", salary=" + salary + "]";
 	}
 
 	

@@ -11,7 +11,7 @@ public class DriverRegisterRequest {
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
-    private String phoneno;
+    private String phoneNo;
 
     @NotBlank(message = "Salary is required")
     @Positive(message = "Salary must be a positive number")
@@ -26,12 +26,12 @@ public class DriverRegisterRequest {
         this.name = name;
     }
 
-    public String getPhoneno() {
-        return phoneno;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setPhoneno(String phoneno) {
-        this.phoneno = phoneno;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public String getSalary() {

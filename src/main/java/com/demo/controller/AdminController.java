@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.dto.BusDto;
 import com.demo.dto.ConductorRegisterRequest;
 import com.demo.dto.DriverRegisterRequest;
 import com.demo.dto.RegisterRequest;
@@ -77,7 +78,6 @@ public class AdminController {
 	private ConductorService conductorService;
 
 	@GetMapping("/dashboard")
-	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getAdminDashboard() {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String userName = authentication.getName();
@@ -98,30 +98,35 @@ public class AdminController {
 	
 	@PostMapping("/saveDriver")
 	public ResponseEntity<?> createDriver(@Valid @RequestBody DriverRegisterRequest driverRequest, BindingResult result) {
-		Map<String, String> errorResponse = new HashMap<>();
+		Map<String, String> response = new HashMap<>();
 		if (result.hasErrors()) {
             result.getFieldErrors().forEach(error -> {
-                errorResponse.put(error.getField(), error.getDefaultMessage());
+                response.put(error.getField(), error.getDefaultMessage());
             });
-            return ResponseEntity.badRequest().body(errorResponse);
+            return ResponseEntity.badRequest().body(response);
         }
+		try {
+			// Check if the phone number is already used by another driver
+		    Optional<Driver> existingDriver = driverRepo.findByPhoneNo(driverRequest.getPhoneNo());
+		    if (existingDriver.isPresent()) {
+		        response.put("phoneNo", "Phone number already exists for another driver");
+		        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		    }
 
+		    Driver driver = new Driver();
+		    driver.setName(driverRequest.getName());
+		    driver.setPhoneno(driverRequest.getPhoneNo());
+		    driver.setSalary(driverRequest.getSalary());
 
-	    // Check if the phone number is already used by another driver
-	    Optional<Driver> existingDriver = driverRepo.findByPhoneno(driverRequest.getPhoneno());
-	    if (existingDriver.isPresent()) {
-	        errorResponse.put("phoneno", "Phone number already exists for another driver");
-	        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-	    }
+		    driverRepo.save(driver);
+		    response.put("message", "Driver Added Successfully");
+		    return new ResponseEntity<>(response,HttpStatus.CREATED);
 
-	    Driver driver = new Driver();
-	    driver.setName(driverRequest.getName());
-	    driver.setPhoneno(driverRequest.getPhoneno());
-	    driver.setSalary(driverRequest.getSalary());
+		} catch (Exception e) {
+			response.put("error", "failed Add Driver: " + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 
-	    driverRepo.save(driver);
-
-	    return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 
@@ -141,11 +146,11 @@ public class AdminController {
 
 	    try {
 	        if (userService.existsByEmail(registerRequest.getEmail())) {
-	            response.put("error", "Email is already taken");
+	            response.put("email", "Email is already taken");
 	            return ResponseEntity.badRequest().body(response);
 	        }
 	        if (userService.existsByPhoneNo(registerRequest.getPhoneNo())) {
-	            response.put("error", "Phone number is already taken");
+	            response.put("phoneNo", "Phone number is already taken");
 	            return ResponseEntity.badRequest().body(response);
 	        }
 
@@ -184,50 +189,80 @@ public class AdminController {
 	}
 	
 	@PostMapping("/createBus")
-	public ResponseEntity<Map<String, String>> createBus(@RequestBody Bus bus, 
-	                        @RequestParam String availableDays, 
-	                        @RequestParam(required = false) List<String> specificDays) {
-		Map<String, String> response = new HashMap<>();
-		String departureTimeStr = bus.getDepartureTime();
-
+	public ResponseEntity<Map<String, String>> createBus(@Valid @RequestBody BusDto busDto, BindingResult result) {
+	    
+	    Map<String, String> response = new HashMap<>();
+	    
+	    if (result.hasErrors()) {
+	        result.getFieldErrors().forEach(error -> {
+	            response.put(error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(response);
+	    }
+	    
 	    try {
-	        // Create a DateTimeFormatter for 12-hour format with AM/PM
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-
-	        // Parse the input string into a LocalTime object
-	        LocalTime departureTime = LocalTime.parse(departureTimeStr, formatter);
-	        
-	        // Set the parsed LocalTime into the Bus object
-	        bus.setDepartureTime(departureTime);
-	        
-	        // Set availability based on the selected options
-	        if ("Every Day".equals(availableDays)) {
-	            bus.setAvailableEveryDay(true);
-	            bus.setSpecificDays(null); // Clear specific days if available every day
-	        } else {
-	            bus.setAvailableEveryDay(false);
-	            bus.setSpecificDays(specificDays); // Set specific days
+	        Optional<Driver> driver = driverRepo.findById(busDto.getDriverId());
+	        if (driver.isEmpty()) {
+	            response.put("Error", "Driver Not Present in DataBase");
+	            return ResponseEntity.badRequest().body(response);
 	        }
 	        
-	        // Save the bus object
-	        busService.savebus(bus);
+	        Optional<Conductor> conductor = conductorRepo.findById(busDto.getConductorId());
+	        if (conductor.isEmpty()) {
+	            response.put("Error", "Conductor Not Present in DataBase");
+	            return ResponseEntity.badRequest().body(response);
+	        }
 	        
-	        response.put("message", "Bus added Successfully");
-	        return ResponseEntity.ok(response);
-	    } catch (DateTimeParseException e) {
-	    	response.put("message", "Invalid Date and Time Format");
+	     	if (busService.isDriverAssignedToAnotherBus(busDto.getDriverId())) {
+	            response.put("driverId", "Driver is already assigned to another bus");
+	            return ResponseEntity.badRequest().body(response);
+	        }
+	        
+	        if (busService.isConductorAssignedToAnotherBus(busDto.getConductorId())) {
+	            response.put("conductorId", "Conductor is already assigned to another bus");
+	            return ResponseEntity.badRequest().body(response);
+	        }
+	   
+			/*
+			 * DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a"); // or
+			 * "HH:mm" for 24-hour format LocalTime departureTime =
+			 * LocalTime.parse(busDto.getDepartureTime(), formatter);
+			 */	        
+	        // Create a new Bus object
+	        Bus bus = new Bus();
+	        bus.setBusNo(busDto.getBusNo());
+	        bus.setStartPlace(busDto.getStartPlace());
+	        bus.setDestination(busDto.getDestination());
+	        bus.setDepartureTime(busDto.getDepartureTime());	        
+	        bus.setTotalSeats(busDto.getTotalSeats());
+	        bus.setTicketPrice(busDto.getTicketPrice());
+	        bus.setDriver(driver.get());
+	        bus.setConductor(conductor.get());
+	        
+	        // Set availability and specific days based on the request
+	        bus.setAvailableEveryDay(busDto.isAvailableEveryDay());
+	        if (busDto.isAvailableEveryDay()) {
+	            bus.setSpecificDays(null);
+	        } else {
+	            bus.setSpecificDays(busDto.getSpecificDays());
+	        }
+	        
+	        busService.saveBus(bus);
+	        
+	        response.put("message", "Bus added successfully");
 	        return ResponseEntity.ok(response);
 	    } catch (Exception e) {
-	    	response.put("message", "An Error Occoured while Adding the Bus Please Try Again Later");
-	        return ResponseEntity.ok(response);
+	        response.put("error", "An error occurred while adding the bus. Please try again later.");
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	    }
 	}
+
 	
 	
 	@GetMapping("/bus")
 	public ResponseEntity<?> getAllBus()
 	{
-		List<Bus> busList = busService.getAllBus();
+		List<Bus> busList = busService.getAllBuses();
 		if(busList != null && !busList.isEmpty()) {
 			return new ResponseEntity<>(busList, HttpStatus.OK);
 		}
