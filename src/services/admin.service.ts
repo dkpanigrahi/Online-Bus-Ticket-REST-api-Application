@@ -4,6 +4,7 @@ import { Driver } from '../app/model/driver';
 import { Observable } from 'rxjs';
 import { Conductor } from '../app/model/conductor';
 import { Bus } from '../app/model/bus';
+import { Profile } from '../app/model/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -26,37 +27,39 @@ export class AdminService {
 
 
   // Save a new driver
-  saveDriver(driver: Driver): Observable<any> {
+  saveDriver(driver: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}/saveDriver`, driver, {headers});
   }
 
   // Save a new conductor
-  saveConductor(conductor: Conductor): Observable<any> {
+  saveConductor(conductor: any): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.baseUrl}/saveConductor`, conductor, {headers});
   }
 
   // Fetch all drivers
   getDrivers(): Observable<Driver[]> {
-    return this.http.get<Driver[]>(`${this.baseUrl}/getDriver`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Driver[]>(`${this.baseUrl}/getDriver`, {headers});
   }
 
   // Fetch all conductors
   getConductors(): Observable<Conductor[]> {
-    return this.http.get<Conductor[]>(`${this.baseUrl}/getConductor`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<Conductor[]>(`${this.baseUrl}/getConductor`,{headers});
   }
 
   // Create a new bus
-  createBus(bus: Bus, availableDays: string, specificDays: string[]): Observable<any> {
-    const params = {
-      availableDays: availableDays,
-      specificDays: specificDays ? specificDays.join(',') : ''
-    };
-
-    return this.http.post(`${this.baseUrl}/createBus`, bus, { params });
+  createBus(bus: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.baseUrl}/createBus`, bus, {headers});
   }
 
-
+    // Fetch Admin Dashboard
+    getDashboard(): Observable<Profile> {
+      const headers = this.getAuthHeaders();
+      return this.http.get<Profile>(`${this.baseUrl}/dashboard`, {headers});
+    }
 
 }

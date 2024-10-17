@@ -1,1 +1,61 @@
-<p>add-conductor works!</p>
+<div class="container p-3">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="card shadow p-2 bg-body rounded">
+                <div class="text-center">
+                    <h4>Add New Conductor</h4>
+                    <div *ngIf="message" class="text-center text-success">{{ message }}</div>
+                    <div *ngIf="errorMessages['general']" class="text-center text-error">
+                        <small>{{ errorMessages['general'] }}</small>
+                      </div>
+                      
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <label for="name">Conductor Name:</label>
+                        <input class="form-control" type="text" id="name" [(ngModel)]="conductor.name" required />
+                        <div *ngIf="errorMessages['name']" class="error">
+                            <small class="text-danger">{{ errorMessages['name'] }}</small>
+                          </div>   
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="name">Enter Email:</label>
+                        <input class="form-control" type="email" id="email" [(ngModel)]="conductor.email" required />
+                        <div *ngIf="errorMessages['email']" class="error">
+                            <small class="text-danger">{{ errorMessages['email'] }}</small>
+                          </div>   
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="name">Enter Password:</label>
+                        <input class="form-control" type="password" id="password" [(ngModel)]="conductor.password" required />
+                        <div *ngIf="errorMessages['password']" class="error">
+                            <small class="text-danger">{{ errorMessages['password'] }}</small>
+                          </div>   
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="phoneno">Phone Number:</label>
+                        <input class="form-control" type="text" id="phoneno" [(ngModel)]="conductor.phoneNo" required />
+                        <div *ngIf="errorMessages['phoneNo']" class="error">
+                            <small class="text-danger">{{ errorMessages['phoneNo'] }}</small>
+                          </div>
+                    </div>
+
+
+                    <div class="mb-2">
+                        <label for="salary">Salary:</label>
+                        <input class="form-control" type="text" id="salary" [(ngModel)]="conductor.salary" required />
+                        <div *ngIf="errorMessages['salary']" class="error">
+                            <small class="text-danger">{{ errorMessages['salary'] }}</small>
+                          </div>
+                    </div>
+ 
+                    <button class="btn btn-primary" (click)="saveConductor()">Save Conductor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

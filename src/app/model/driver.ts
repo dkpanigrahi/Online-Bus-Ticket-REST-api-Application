@@ -1,7 +1,7 @@
 export interface Driver {
-
+    id? : number;
     name: string;
-    phoneno: string;
+    phoneNo: string;
     salary: string;
   }
   

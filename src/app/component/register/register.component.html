@@ -3,6 +3,9 @@
         <div class="col-md-6 offset-md-3">
             <div class="card shadow p-3 bg-body rounded">
                 <div class="text-center fs-4">Register Page</div>
+                <div *ngIf="message" class="text-center text-success">
+                  {{ message }}
+                </div>
                 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                   <div class="mb-3">
                     <label for="name">Name:</label>
@@ -68,9 +71,7 @@
                     <button class="btn btn-primary col-md-12" type="submit" [disabled]="registerForm.invalid">Register</button>
                 </form>
                   
-                <div *ngIf="message" class="success">
-                  {{ message }}
-                </div>
+                
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@ export class AddDriverComponent {
   
   driver: Driver = {
     name: '',
-    phoneno: '',
+    phoneNo: '',
     salary: ''
   };
   
@@ -28,11 +28,14 @@ export class AddDriverComponent {
     // Reset messages before attempting to save
     this.message = '';
     this.errorMessages = {};
-
-    this.service.saveDriver(this.driver).subscribe({
+    const { id, ...driverDataWithoutId } = this.driver;  // Exclude 'id'
+    this.service.saveDriver(driverDataWithoutId).subscribe({
       next: (response) => {
         console.log('Driver saved successfully', response);
-        this.message = response.message; 
+        this.message = response.message;
+        this.driver.name='';
+        this.driver.phoneNo='';
+        this.driver.salary=''; 
       },
       error: (errorResponse) => {
         // Check if there are specific field errors returned from the backend
@@ -40,7 +43,7 @@ export class AddDriverComponent {
           this.errorMessages = errorResponse.error; // Assuming the backend returns an object with field errors
         } else if (errorResponse.status === 409) {
           // Handle specific case for phone number conflict
-          this.errorMessages['phoneno'] = 'Phone number already exists for another driver';
+          this.errorMessages['phoneNo'] = 'Phone number already exists for another driver';
         } else {
           this.errorMessages['general'] = errorResponse.error || 'An unexpected error occurred'; // Fallback for unexpected errors
         }

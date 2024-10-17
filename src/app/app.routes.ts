@@ -7,6 +7,7 @@ import { AdminHomeComponent } from './component/admin-home/admin-home.component'
 import { authGuard } from '../services/auth.guard';
 import { AddDriverComponent } from './component/add-driver/add-driver.component';
 import { AddConductorComponent } from './component/add-conductor/add-conductor.component';
+import { AddBusComponent } from './component/add-bus/add-bus.component';
 
 export const routes: Routes = [
     {
@@ -46,6 +47,12 @@ export const routes: Routes = [
       {
         path: 'add-conductor',
         component: AddConductorComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
+      {
+        path: 'add-bus',
+        component: AddBusComponent,
         canActivate: [authGuard], 
         data: { role: 'ROLE_ADMIN' }
       },
