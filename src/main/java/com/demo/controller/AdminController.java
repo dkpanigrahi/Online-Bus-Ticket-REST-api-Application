@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.BusDto;
+import com.demo.dto.BusResponse;
 import com.demo.dto.ConductorRegisterRequest;
 import com.demo.dto.DriverRegisterRequest;
 import com.demo.dto.RegisterRequest;
@@ -260,15 +262,30 @@ public class AdminController {
 	
 	
 	@GetMapping("/bus")
-	public ResponseEntity<?> getAllBus()
-	{
-		List<Bus> busList = busService.getAllBuses();
-		if(busList != null && !busList.isEmpty()) {
-			return new ResponseEntity<>(busList, HttpStatus.OK);
-		}
-		return new ResponseEntity<>("No Bus Available",HttpStatus.NOT_FOUND);
-		
+	public ResponseEntity<?> getAllBus() {
+	    List<Bus> busList = busService.getAllBuses();
+	    
+	    if (busList != null && !busList.isEmpty()) {
+	        List<BusResponse> busRespoonse = busList.stream().map(bus -> 
+	            new BusResponse(
+	                bus.getId(),
+	                bus.getBusNo(),
+	                bus.getStartPlace(),
+	                bus.getDestination(),
+	                bus.getDepartureTime(),
+	                bus.isAvailableEveryDay(),
+	                bus.getSpecificDays(),
+	                bus.getTotalSeats(),
+	                bus.getTicketPrice(),
+	                bus.getDriver().getName(),  
+	                bus.getConductor().getUser().getName())).collect(Collectors.toList());
+
+	        return new ResponseEntity<>(busRespoonse, HttpStatus.OK);
+	    }
+	    
+	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
 	}
+
 	
 	@GetMapping("/ticket")
 	public ResponseEntity<?> getAllTicket()
@@ -281,6 +298,36 @@ public class AdminController {
 		
 	}
 	
+	
+	@GetMapping("/busCount")
+	public ResponseEntity<?> getBusCount()
+	{
+		long c = busService.countBus();
+		return new ResponseEntity<>(c,HttpStatus.OK);		
+	}
+	
+	@GetMapping("/driverCount")
+	public ResponseEntity<?> getDriverCount()
+	{
+		long c = driverRepo.count();
+		return new ResponseEntity<>(c,HttpStatus.OK);		
+	}
+	
+	@GetMapping("/conductorCount")
+	public ResponseEntity<?> getConductorCount()
+	{
+		String role = "ROLE_CONDUCTOR";
+		long c = userService.countUser(role);
+		return new ResponseEntity<>(c,HttpStatus.OK);		
+	}
+	
+	@GetMapping("/userCount")
+	public ResponseEntity<?> getUserCount()
+	{
+		String role = "ROLE_USER";
+		long c = userService.countUser(role);
+		return new ResponseEntity<>(c,HttpStatus.OK);		
+	}
 	
 	
 }

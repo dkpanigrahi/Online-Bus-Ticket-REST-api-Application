@@ -76,7 +76,7 @@ public class Bus {
 
    
     public String getDepartureTime() {
-        return this.getDepartureTime();
+        return departureTime;
     }
 
     public void setDepartureTime(String departureTime) {

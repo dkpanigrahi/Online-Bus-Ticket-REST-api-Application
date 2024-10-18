@@ -49,6 +49,10 @@ public class BusService {
        
         return busRepository.existsByConductorId(conductorId);
     }
+    
+    public long countBus() {
+    	return busRepository.count();
+    }
 
 	
 }

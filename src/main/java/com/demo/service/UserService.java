@@ -35,5 +35,8 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 	
+	public long countUser(String role) {
+		return userRepository.countByRole(role);
+	}
 
 }
