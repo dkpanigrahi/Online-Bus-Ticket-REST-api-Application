@@ -1,0 +1,26 @@
+.container {
+  max-width: 1500px;
+}
+  
+  .table {
+    margin-bottom: 20px;
+  }
+  
+  .table td {
+    vertical-align: middle;
+  }
+
+  .custom-header {
+    background-color: #003366; 
+    color: white; 
+    padding: 10px; 
+    border-radius: 5px; 
+    margin-bottom: 10px;
+   
+  }
+
+  .table td {
+    vertical-align: middle; 
+  }
+  
+  

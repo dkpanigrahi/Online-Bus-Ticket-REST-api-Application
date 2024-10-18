@@ -1,0 +1,54 @@
+<div class="container mt-3">
+  <span class="text-center text-secondary"><h4>All Bus Details</h4></span>
+</div>
+
+
+
+<div class="container mt-3 custom-container-width">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card shadow bg-body rounded">
+          <table class="table table-striped custom-table-width">
+            <thead class="custom-table-header">
+              <tr>
+                <th>No.</th>
+                <th>Bus No</th>
+                <th>StartPlace</th>
+                <th>Destination</th>
+                <th>Departure Time</th>
+                <th>Total Seat</th>
+                <th>Ticket Price</th>
+                <th>Driver Name</th>
+                <th>Conductor Name</th>
+                <th>Availibility</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of bus; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ b.busNo}}</td>
+                <td>{{ b.startPlace }}</td>
+                <td>{{ b.destination }}</td>
+                <td>{{ b.departureTime }}</td>
+                <td>{{ b.totalSeats }}</td>
+                <td>{{ b.ticketPrice }}</td>
+                <td>{{ b.driverName }}</td>
+                <td>{{ b.conductorName}}</td>
+                <td>
+                  {{ b.availableEveryDay ? 'All Day' : b.specificDays.join(', ') }}
+                </td>
+                <td>
+                  <div class="d-flex justify-content-between">
+                    <button class="btn btn-sm btn-warning ms-1" (click)="editBus(b.id)">Edit</button>
+                    <button class="btn btn-sm btn-danger ms-1" (click)="deleteBus(b.id)">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

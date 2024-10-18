@@ -8,6 +8,11 @@ import { authGuard } from '../services/auth.guard';
 import { AddDriverComponent } from './component/add-driver/add-driver.component';
 import { AddConductorComponent } from './component/add-conductor/add-conductor.component';
 import { AddBusComponent } from './component/add-bus/add-bus.component';
+import { ViewBusComponent } from './component/view-bus/view-bus.component';
+import { ViewDriverComponent } from './component/view-driver/view-driver.component';
+import { ViewConductorComponent } from './component/view-conductor/view-conductor.component';
+import { ViewUserComponent } from './component/view-user/view-user.component';
+import { ProfileComponent } from './component/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -56,4 +61,36 @@ export const routes: Routes = [
         canActivate: [authGuard], 
         data: { role: 'ROLE_ADMIN' }
       },
+      {
+        path: 'view-bus',
+        component: ViewBusComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
+      {
+        path: 'view-driver',
+        component: ViewDriverComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
+      {
+        path: 'view-conductor',
+        component: ViewConductorComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
+      {
+        path: 'view-user',
+        component: ViewUserComponent,
+        canActivate: [authGuard], 
+        data: { role: 'ROLE_ADMIN' }
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_ADMIN', 'ROLE_USER'] }  
+      }
+      
+      
 ];

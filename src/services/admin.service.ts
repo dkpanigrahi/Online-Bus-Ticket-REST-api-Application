@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Conductor } from '../app/model/conductor';
 import { Bus } from '../app/model/bus';
 import { Profile } from '../app/model/profile';
+import { Busresponse } from '../app/model/busresponse';
 
 @Injectable({
   providedIn: 'root'
@@ -56,10 +57,41 @@ export class AdminService {
     return this.http.post<any>(`${this.baseUrl}/createBus`, bus, {headers});
   }
 
+  // Fetch all Bus
+  getAllBus(): Observable<Busresponse[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<Busresponse[]>(`${this.baseUrl}/bus`,{headers});
+  }
+
+  deleteBus(id:number):Observable<void>{
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/bus/${id}`,{headers});
+  }
+
     // Fetch Admin Dashboard
     getDashboard(): Observable<Profile> {
       const headers = this.getAuthHeaders();
       return this.http.get<Profile>(`${this.baseUrl}/dashboard`, {headers});
+    }
+
+    getBusCount():Observable<number>{
+      const headers = this.getAuthHeaders();
+      return this.http.get<number>(`${this.baseUrl}/busCount`,{headers});
+    }
+
+    getDriverCount():Observable<number>{
+      const headers = this.getAuthHeaders();
+      return this.http.get<number>(`${this.baseUrl}/driverCount`,{headers});
+    }
+
+    getConductorCount():Observable<number>{
+      const headers = this.getAuthHeaders();
+      return this.http.get<number>(`${this.baseUrl}/conductorCount`,{headers});
+    }
+
+    getUserCount():Observable<number>{
+      const headers = this.getAuthHeaders();
+      return this.http.get<number>(`${this.baseUrl}/userCount`,{headers});
     }
 
 }

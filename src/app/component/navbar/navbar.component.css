@@ -19,22 +19,20 @@
 }
 
 /* Profile section with account icon */
-.profile-section {
+.profile-container {
   display: flex;
   align-items: center;
-  margin-left: 730px; /* Ensure the profile section is pushed to the far right */
+  margin-right: 100px; /* Ensure the profile section is pushed to the far right */
   height: auto;
 }
 
-.profile-section mat-icon {
+.profile-container mat-icon {
   margin-right: 3px;
 }
 
 /* Username styling */
-.profile-section span {
+.profile-container span {
   font-weight:400; 
   font-size: 20px;
   vertical-align: 4px; /* Ensure the text aligns vertically with the icon */
 }
-
-
