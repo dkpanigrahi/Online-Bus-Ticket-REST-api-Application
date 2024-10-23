@@ -6,6 +6,9 @@ import { Conductor } from '../app/model/conductor';
 import { Bus } from '../app/model/bus';
 import { Profile } from '../app/model/profile';
 import { Busresponse } from '../app/model/busresponse';
+import { ConductorResponce } from '../app/model/conductor-responce';
+import { DriverResponse } from '../app/model/driver-response';
+import { UserList } from '../app/model/user-list';
 
 @Injectable({
   providedIn: 'root'
@@ -40,15 +43,22 @@ export class AdminService {
   }
 
   // Fetch all drivers
-  getDrivers(): Observable<Driver[]> {
+  getDrivers(): Observable<DriverResponse[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Driver[]>(`${this.baseUrl}/getDriver`, {headers});
+    return this.http.get<DriverResponse[]>(`${this.baseUrl}/getDriver`, {headers});
   }
 
-  // Fetch all conductors
-  getConductors(): Observable<Conductor[]> {
+  // Fetch all Users
+  getUsers(): Observable<UserList[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Conductor[]>(`${this.baseUrl}/getConductor`,{headers});
+    return this.http.get<UserList[]>(`${this.baseUrl}/getUsers`, {headers});
+  }
+
+
+  // Fetch all conductors
+  getConductors(): Observable<ConductorResponce[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<ConductorResponce[]>(`${this.baseUrl}/getConductor`,{headers});
   }
 
   // Create a new bus

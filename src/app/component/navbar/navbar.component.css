@@ -22,7 +22,7 @@
 .profile-container {
   display: flex;
   align-items: center;
-  margin-right: 100px; /* Ensure the profile section is pushed to the far right */
+  margin-right: 120px; /* Ensure the profile section is pushed to the far right */
   height: auto;
 }
 

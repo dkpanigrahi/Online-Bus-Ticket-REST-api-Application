@@ -39,9 +39,9 @@
     View
   </button>
   <mat-menu #viewMenu="matMenu">
-    <button mat-menu-item routerLink="/view-drivers">View Driver</button>
-    <button mat-menu-item routerLink="/view-conductors">View Conductor</button>
-    <button mat-menu-item routerLink="/view-buses">View Bus</button>
+    <button mat-menu-item routerLink="/view-driver">View Driver</button>
+    <button mat-menu-item routerLink="/view-conductor">View Conductor</button>
+    <button mat-menu-item routerLink="/view-bus">View Bus</button>
     <button mat-menu-item routerLink="/view-tickets">View Ticket</button>
   </mat-menu>
 
@@ -53,6 +53,7 @@
   <!-- If logged in, show profile menu -->
   <div *ngIf="isLoggedIn" class="profile-container">
     <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+      
       <mat-icon>account_circle</mat-icon>
       <span>{{ profile.name }}</span>
     </button>

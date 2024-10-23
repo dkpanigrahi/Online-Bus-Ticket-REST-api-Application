@@ -1,1 +1,44 @@
-<p>view-conductor works!</p>
+<div class="container mt-3">
+    <span class="text-center text-secondary"><h4>All Conductor Details</h4></span>
+  </div>
+  
+  
+  
+  <div class="container mt-3 custom-container-width">
+      <div class="row justify-content-center">
+        <div class="col-md-8 ">
+          <div class="card shadow bg-body rounded">
+            <table class="table table-striped custom-table-width">
+              <thead class="custom-table-header">
+                <tr>
+                  <th>No.</th>
+                  <th>Conductor Name</th>
+                  <th>Email</th>
+                  <th>PhoneNo</th>
+                  <th>Salary</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of conductor; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ b.name}}</td>
+                  <td>{{ b.email }}</td>
+                  <td>{{ b.phoneNo }}</td>
+                  <td>{{ b.salary }}</td>
+                
+                  <td>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-warning ms-1" (click)="editConductor(b.id)">Edit</button>
+                      <button class="btn btn-sm btn-danger ms-1" (click)="deleteConductor(b.id)">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  

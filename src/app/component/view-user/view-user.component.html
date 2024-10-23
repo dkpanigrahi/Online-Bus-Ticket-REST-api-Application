@@ -1,1 +1,41 @@
-<p>view-user works!</p>
+<div class="container mt-3">
+    <span class="text-center text-secondary"><h4>All Driver Details</h4></span>
+  </div>
+  
+  
+  
+  <div class="container mt-3 custom-container-width">
+      <div class="row justify-content-center">
+        <div class="col-md-6 ">
+          <div class="card shadow bg-body rounded">
+            <table class="table table-striped custom-table-width">
+              <thead class="custom-table-header">
+                <tr>
+                  <th>No.</th>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>PhoneNo</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of users; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ b.name}}</td>
+                  <td>{{ b.email }}</td>
+                  <td>{{ b.phoneNo }}</td>
+                
+                  <td>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-danger ms-1" (click)="blockUser(b.id)">Block</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
