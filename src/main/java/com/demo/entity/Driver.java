@@ -34,12 +34,12 @@ public class Driver {
 		this.name = name;
 	}
 
-	public String getPhoneno() {
+	public String getPhoneNo() {
 		return phoneNo;
 	}
 
-	public void setPhoneno(String phoneno) {
-		this.phoneNo = phoneno;
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
 	public String getSalary() {

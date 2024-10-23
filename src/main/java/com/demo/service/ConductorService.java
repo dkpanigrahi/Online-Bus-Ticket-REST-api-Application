@@ -28,7 +28,7 @@ public class ConductorService {
         user.setName(conductorRequest.getName());
         user.setEmail(conductorRequest.getEmail());
         user.setPassword(passwordEncoder.encode(conductorRequest.getPassword()));
-        user.setPhoneno(conductorRequest.getPhoneNo());
+        user.setPhoneNo(conductorRequest.getPhoneNo());
         user.setRole("ROLE_CONDUCTOR");
 
         // Save the user to the database

@@ -34,7 +34,7 @@ public class ConductorController {
 	        userResponseDTO.setName(user.get().getName());
 	        userResponseDTO.setEmail(user.get().getEmail());
 	        userResponseDTO.setRole(user.get().getRole());
-	        userResponseDTO.setPhoneNo(user.get().getPhoneno());
+	        userResponseDTO.setPhoneNo(user.get().getPhoneNo());
 
 	        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
 	    }

@@ -60,7 +60,7 @@ public class AuthController {
             User user = new User();
             user.setName(registerRequest.getName());
             user.setEmail(registerRequest.getEmail());
-            user.setPhoneno(registerRequest.getPhoneno());
+            user.setPhoneNo(registerRequest.getPhoneno());
             user.setPassword(registerRequest.getPassword());
             user.setRole("ROLE_USER");
             userService.registerUser(user);

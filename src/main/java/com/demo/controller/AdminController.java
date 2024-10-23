@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.dto.BusDto;
 import com.demo.dto.BusResponse;
 import com.demo.dto.ConductorRegisterRequest;
+import com.demo.dto.ConductorResponse;
 import com.demo.dto.DriverRegisterRequest;
 import com.demo.dto.RegisterRequest;
 import com.demo.dto.UserResponse;
@@ -90,7 +91,7 @@ public class AdminController {
 	        userResponseDTO.setName(user.get().getName());
 	        userResponseDTO.setEmail(user.get().getEmail());
 	        userResponseDTO.setRole(user.get().getRole());
-	        userResponseDTO.setPhoneNo(user.get().getPhoneno());
+	        userResponseDTO.setPhoneNo(user.get().getPhoneNo());
 
 	        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
 	    }
@@ -117,7 +118,7 @@ public class AdminController {
 
 		    Driver driver = new Driver();
 		    driver.setName(driverRequest.getName());
-		    driver.setPhoneno(driverRequest.getPhoneNo());
+		    driver.setPhoneNo(driverRequest.getPhoneNo());
 		    driver.setSalary(driverRequest.getSalary());
 
 		    driverRepo.save(driver);
@@ -179,16 +180,6 @@ public class AdminController {
 		
 	}
 	
-	@GetMapping("/getConductor")
-	public ResponseEntity<?> getAllConductor()
-	{
-		List<Conductor> condList = conductorRepo.findAll();
-		if(condList != null && !condList.isEmpty()) {
-			return new ResponseEntity<>(condList, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		
-	}
 	
 	@PostMapping("/createBus")
 	public ResponseEntity<Map<String, String>> createBus(@Valid @RequestBody BusDto busDto, BindingResult result) {
@@ -285,6 +276,28 @@ public class AdminController {
 	    
 	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
 	}
+	
+	@GetMapping("/getConductor")
+	public ResponseEntity<?> getAllConductor()
+	{
+		List<Conductor> condList = conductorRepo.findAll();
+		if (condList != null && !condList.isEmpty()) {
+			
+			  List<ConductorResponse> conductorResponse = condList.stream().map(cond ->
+			  new ConductorResponse( 
+					  cond.getId(), 
+					  cond.getUser().getName(),
+					  cond.getUser().getEmail(),
+					  cond.getUser().getPassword(),
+					  cond.getUser().getPhoneNo(),
+					  cond.getSalary())).collect(Collectors.toList());
+			 
+	        return new ResponseEntity<>(conductorResponse, HttpStatus.OK);
+	    }
+	    
+	    return new ResponseEntity<>("No Conductor Available", HttpStatus.NOT_FOUND);
+		
+	}
 
 	
 	@GetMapping("/ticket")
@@ -295,6 +308,19 @@ public class AdminController {
 			return new ResponseEntity<>(TicketList, HttpStatus.OK);
 		}
 		return new ResponseEntity<>("No Ticket Available",HttpStatus.NOT_FOUND);
+		
+	}
+	
+	
+	@GetMapping("/getUsers")
+	public ResponseEntity<?> getAllUser()
+	{
+		String Role = "ROLE_USER";
+		List<User> userList = userService.getAllUserByRole(Role);
+		if(userList != null && !userList.isEmpty()) {
+			return new ResponseEntity<>(userList, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 	}
 	

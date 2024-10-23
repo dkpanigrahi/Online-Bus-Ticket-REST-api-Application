@@ -1,5 +1,6 @@
 package com.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByPhoneNo(String phoneno);
 	
 	long countByRole(String role);
+	
+	List<User> findByRole(String role);
 	
 }
