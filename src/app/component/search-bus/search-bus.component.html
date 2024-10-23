@@ -1,0 +1,74 @@
+<!-- search-bus.component.html -->
+<div class="container p-4">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="card shadow p-2 bg-body rounded">
+            <form (submit)="onSearch()">
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label for="startPlace">Start Place:</label>
+                  <input type="text" id="startPlace" [(ngModel)]="startPlace" class="form-control" name="startPlace" required>
+                </div>
+          
+                <div class="col-md-4">
+                  <label for="destination">Destination:</label>
+                  <input type="text" id="destination" [(ngModel)]="destination" name="destination" class="form-control" required>
+                </div>
+          
+                <div class="col-md-4">
+                  <label for="date">Date:</label>
+                  <input type="date" id="date" [(ngModel)]="date" name="date" class="form-control" required>
+                </div>
+          
+                <div class="mt-3 text-center"><button type="submit" class="btn btn-success">Search Bus</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+  </div>
+</div>
+   
+<div *ngIf="errorMessage" class="text-center text-danger">{{ errorMessage }}</div>
+
+    <div *ngIf="buses.length > 0" class="container mt-3 custom-container-width">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card shadow bg-body rounded">
+            <table class="table table-striped custom-table-width">
+              <thead class="custom-table-header">
+                <tr>
+                  <th>Bus No</th>
+                  <th>StartPlace</th>
+                  <th>Destination</th>
+                  <th>Departure Time</th>
+                  <th>Total Seat</th>
+                  <th>Ticket Price</th>
+                  <th>Availibility</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let b of buses; let i = index">
+                  <td>{{ b.busNo}}</td>
+                  <td>{{ b.startPlace }}</td>
+                  <td>{{ b.destination }}</td>
+                  <td>{{ b.departureTime }}</td>
+                  <td>{{ b.totalSeats }}</td>
+                  <td>{{ b.ticketPrice }}</td>
+                  <td>
+                    {{ b.availableEveryDay ? 'All Day' : b.specificDays.join(', ') }}
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-between">
+                      <button (click)="bookBus(b.id)" class="btn btn-success">Book</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  

@@ -13,6 +13,7 @@ import { ViewDriverComponent } from './component/view-driver/view-driver.compone
 import { ViewConductorComponent } from './component/view-conductor/view-conductor.component';
 import { ViewUserComponent } from './component/view-user/view-user.component';
 import { ProfileComponent } from './component/profile/profile.component';
+import { BookTicketComponent } from './component/book-ticket/book-ticket.component';
 
 export const routes: Routes = [
     {
@@ -90,6 +91,12 @@ export const routes: Routes = [
         component: ProfileComponent,
         canActivate: [authGuard], 
         data: { role: ['ROLE_ADMIN', 'ROLE_USER'] }  
+      },
+      {
+        path:'book-ticket/:busId/:date',
+        component:BookTicketComponent,
+        canActivate:[authGuard],
+        data:{role: ['ROLE_ADMIN', 'ROLE_USER'] }
       }
       
       

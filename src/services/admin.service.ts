@@ -73,6 +73,7 @@ export class AdminService {
     return this.http.get<Busresponse[]>(`${this.baseUrl}/bus`,{headers});
   }
 
+  //delete Bus
   deleteBus(id:number):Observable<void>{
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.baseUrl}/bus/${id}`,{headers});

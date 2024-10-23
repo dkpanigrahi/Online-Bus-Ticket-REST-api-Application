@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
 import { Profile } from '../../model/profile'; // Adjust this path according to your structure
 import { AdminService } from '../../../services/admin.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,7 +31,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   private subscription: Subscription = new Subscription();
 
-  constructor(private authService: AuthserviceService, private router: Router, private adminService: AdminService) { }
+  constructor(private authService: AuthserviceService, 
+              private router: Router, 
+              private adminService: AdminService,
+              private userService:UserService) { }
 
   ngOnInit(): void {
     // Subscribe to the login status observable
@@ -47,14 +51,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   loadProfile(): void {
-    this.adminService.getDashboard().subscribe({
-      next: (profileData: Profile) => {
-        this.profile = profileData;
-      },
-      error: (error) => {
-        console.error('Error loading profile data', error);
-      }
-    });
+    if(this.isAdmin){
+      this.adminService.getDashboard().subscribe({
+        next: (profileData: Profile) => {
+          this.profile = profileData;
+        },
+        error: (error) => {
+          console.error('Error loading profile data', error);
+        }
+      });
+    } else{
+      this.userService.getDashboard().subscribe({
+        next: (profileData: Profile) => {
+          this.profile = profileData;
+        },
+        error: (error) => {
+          console.error('Error loading profile data', error);
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
