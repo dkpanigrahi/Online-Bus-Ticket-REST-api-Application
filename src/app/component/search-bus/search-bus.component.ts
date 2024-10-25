@@ -40,7 +40,7 @@ export class SearchBusComponent {
   bookBus(busId: number): void {
     if (this.isLoggedIn()) {
       // Navigate to booking page or call booking API
-      this.router.navigate(['/book-bus', busId,this.date]);
+      this.router.navigate(['/book-ticket', busId, this.date]);
     } else {
       alert('You must be logged in to book a bus.');
     }

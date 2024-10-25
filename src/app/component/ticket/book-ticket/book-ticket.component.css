@@ -1,0 +1,14 @@
+.scrollable-seat-list {
+    max-height: 200px; /* Adjust height as needed */
+    overflow-y: auto;
+  }
+  
+  .available-seat {
+    color: green;
+  }
+  
+  .booked-seat {
+    color: red;
+    text-decoration: line-through; /* Optional to make booked seats stand out more */
+  }
+  
