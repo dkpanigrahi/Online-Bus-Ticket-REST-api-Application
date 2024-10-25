@@ -19,7 +19,16 @@ export class SearchBusComponent {
   buses: Busresponse[] = [];
   errorMessage: string = '';
 
+  minDate: string = '';
+
+
   constructor(private service: PublicServiceService,private router : Router) {}
+
+  ngOnInit(): void {
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];
+  }
+
 
   onSearch(): void {
     this.service.searchBus(this.startPlace, this.destination, this.date).subscribe(

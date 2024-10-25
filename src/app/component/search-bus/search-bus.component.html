@@ -9,6 +9,7 @@
                   <label for="startPlace">Start Place:</label>
                   <input type="text" id="startPlace" [(ngModel)]="startPlace" class="form-control" name="startPlace" required>
                 </div>
+               
           
                 <div class="col-md-4">
                   <label for="destination">Destination:</label>
@@ -17,7 +18,7 @@
           
                 <div class="col-md-4">
                   <label for="date">Date:</label>
-                  <input type="date" id="date" [(ngModel)]="date" name="date" class="form-control" required>
+                  <input type="date" id="date" [(ngModel)]="date" name="date" class="form-control" required [min]="minDate">
                 </div>
           
                 <div class="mt-3 text-center"><button type="submit" class="btn btn-success">Search Bus</button></div>

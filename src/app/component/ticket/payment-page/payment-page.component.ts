@@ -15,6 +15,7 @@ export class PaymentPageComponent {
 
   passengerName: string = '';
   busNumber:string='';
+  busId:number=0;
   startPlace:string='';
   destination:string='';
   departureTime:string='';
@@ -26,6 +27,7 @@ export class PaymentPageComponent {
     const navigation = this.router.getCurrentNavigation();
     this.passengerName = navigation?.extras.state?.['passengerName'] ?? 'Unknown Passenger';
     this.busNumber = navigation?.extras.state?.['busNumber'] ?? 'Unknown Bus Number';
+    this.busId = navigation?.extras.state?.['busId'] ?? 'Unknown Bus Number';
     this.startPlace = navigation?.extras.state?.['from'] ?? 'Unknown Passenger';
     this.destination = navigation?.extras.state?.['to'] ?? 'Unknown Bus Number';
     this.amount = navigation?.extras.state?.['amount'] ?? 'Unknown Passenger';

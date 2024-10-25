@@ -77,6 +77,11 @@ export class BookTicketComponent {
     this.totalPrice = selectedCount * this.busDetails.ticketPrice;
   }
 
+  isAnySeatSelected(): boolean {
+    return Object.values(this.selectedSeats).some(seat => seat === true);
+  }
+  
+
   // This method can be called whenever a seat is selected/deselected
   onSeatSelectionChange() {
     this.calculateTotalPrice();
@@ -103,6 +108,7 @@ export class BookTicketComponent {
                 this.router.navigate(['/payment-page'], { 
                   state: { passengerName: this.passengerName, 
                            busNumber:this.busDetails.busNo,
+                           busNo:this.busDetails.id,
                            from:this.busDetails.startPlace,
                            to:this.busDetails.destination,
                            time:this.busDetails.departureTime,

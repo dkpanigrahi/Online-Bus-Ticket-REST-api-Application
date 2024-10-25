@@ -15,59 +15,69 @@
       </div>
   
       <!-- Main Form Div (Right Side, aligned closer to the left) -->
-      <div class="col-md-8 form-container">
-        <div class="card">
-          <div class="text-center">
-            <h5>Passenger Information</h5>
-          </div>
-          <div *ngIf="message" class="text-center text-danger">{{ message }}</div>
-          <div *ngIf="errorMessages['error']" class="text-center text-error">
-            <small>{{ errorMessages['error'] }}</small>
-          </div>
-          <div class="card-body">
-            <form (ngSubmit)="bookTicket()">
-              <div class="form-group mb-3">
-                <label for="passengerName">Enter Passenger Name</label>
-                <input id="passengerName" class="form-control" type="text" [(ngModel)]="passengerName" name="passengerName" required />
-              </div>
-  
-              <div class="form-group mb-2 ">
-                <label for="seatno">Select Seat Number</label>
-                <div class="form-group scrollable-seat-list">
-                  <ul class="list-group">
-                    <li *ngFor="let seat of seatMap | keyvalue" class="list-group-item">
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="seat"
-                          [value]="seat.key"
-                          [(ngModel)]="selectedSeats[seat.key]"
-                          [disabled]="seat.value"
-                          (change)="onSeatSelectionChange()" 
-                        />
-                        <span [ngClass]="{'available-seat': !seat.value, 'booked-seat': seat.value}">
-                            Seat {{ seat.key }} - {{ seat.value ? 'Booked' : 'Available' }}
-                        </span>
-                      </label>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-  
-              <div class="form-group">
-                <p>Travel Date: {{ date }}</p>
-              </div>
-  
-              <div class="form-group">
-                <label>Total Price:</label>
-                <span>{{ totalPrice | currency }}</span>
-              </div>
-  
-              <button type="submit" class="btn btn-success mt-2">Book Ticket</button>
-            </form>
+<div class="col-md-8 form-container">
+  <div class="card">
+    <div class="text-center">
+      <h5>Passenger Information</h5>
+    </div>
+    <div *ngIf="message" class="text-center text-danger">{{ message }}</div>
+    <div *ngIf="errorMessages['error']" class="text-center text-error">
+      <small>{{ errorMessages['error'] }}</small>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="bookTicket()">
+        <div class="form-group mb-3">
+          <label for="passengerName">Enter Passenger Name</label>
+          <input 
+            id="passengerName" 
+            class="form-control" 
+            type="text" 
+            [(ngModel)]="passengerName" 
+            name="passengerName" 
+            required
+            #passengerNameRef="ngModel" 
+          />
+          <!-- Error message if Passenger Name is empty -->
+          <div *ngIf="passengerNameRef.invalid && passengerNameRef.touched" class="text-danger">
+            Passenger name is required.
           </div>
         </div>
-      </div>
+
+        <div class="form-group mb-2">
+          <label for="seatno">Select Seat Number</label>
+          <div class="form-group scrollable-seat-list">
+            <ul class="list-group">
+              <li *ngFor="let seat of seatMap | keyvalue" class="list-group-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="seat"
+                    [value]="seat.key"
+                    [(ngModel)]="selectedSeats[seat.key]"
+                    [disabled]="seat.value"
+                    (change)="onSeatSelectionChange()" 
+                  />
+                  <span [ngClass]="{'available-seat': !seat.value, 'booked-seat': seat.value}">
+                    Seat {{ seat.key }} - {{ seat.value ? 'Booked' : 'Available' }}
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <p>Travel Date: {{ date }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Total Price:</label>
+          <span>{{ totalPrice | currency }}</span>
+        </div>
+
+        <!-- Disable button unless passengerName is entered and at least one seat is selected -->
+        <button type="submit" class="btn btn-success mt-2" [disabled]="!passengerName || !isAnySeatSelected()">Book Ticket</button>
+      </form>
     </div>
   </div>
-  
+</div>
