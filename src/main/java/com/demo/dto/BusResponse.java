@@ -32,6 +32,11 @@ public class BusResponse {
         this.conductorName = conductorName;
     }
 
+	public BusResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}
