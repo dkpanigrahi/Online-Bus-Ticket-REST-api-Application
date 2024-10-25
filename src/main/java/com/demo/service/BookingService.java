@@ -34,7 +34,7 @@ public class BookingService {
         bookingRepository.deleteByUserAndInProcess(user, true);
     }
 	
-	// Run this task every 5 minutes (or choose your own schedule)
+	// Run this task every 5 minutes
     @Scheduled(fixedRate = 100000)  // 300,000 milliseconds = 5 minutes
     public void deleteExpiredBookings() {
         LocalDateTime now = LocalDateTime.now();
@@ -54,7 +54,7 @@ public class BookingService {
     }
 
     public Map<Integer, Boolean> getSeatAvailability(Integer busId, LocalDate date) {
-        List<Booking> bookings = bookingRepository.findByBusIdAndBookingDate(busId, date);
+    	List<Booking> bookings = bookingRepository.findByBusIdAndBookingDateAndBookedTrue(busId, date);
         
         // Fetch total number of seats for the bus
         Bus bus = busRepository.findById(busId).orElseThrow(() -> new RuntimeException("Bus not found"));
