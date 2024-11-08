@@ -12,14 +12,14 @@ import jakarta.persistence.OneToOne;
 public class Conductor {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;  // Conductor has user credentials//conductor also a user
-
-    private double salary;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	
+	private String name;
+	
+	private String phoneNo;
+	
+	private String salary;
 
 	public int getId() {
 		return id;
@@ -29,19 +29,27 @@ public class Conductor {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public String getName() {
+		return name;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public double getSalary() {
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getSalary() {
 		return salary;
 	}
 
-	public void setSalary(double salary) {
+	public void setSalary(String salary) {
 		this.salary = salary;
 	}
 

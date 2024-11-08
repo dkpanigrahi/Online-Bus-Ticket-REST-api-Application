@@ -125,7 +125,7 @@ public class UserController {
 	        busResponse.setTotalSeats(bus.getTotalSeats());
 	        busResponse.setTicketPrice(bus.getTicketPrice());
 	        busResponse.setDriverName(bus.getDriver().getName());  
-	        busResponse.setConductorName(bus.getConductor().getUser().getName()); 
+	        busResponse.setConductorName(bus.getConductor().getName()); 
 
 	        return new ResponseEntity<>(busResponse, HttpStatus.OK);
 	    }

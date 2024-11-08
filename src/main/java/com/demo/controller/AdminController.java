@@ -43,7 +43,6 @@ import com.demo.repository.DriverRepository;
 import com.demo.repository.TicketRepository;
 import com.demo.repository.UserRepository;
 import com.demo.service.BusService;
-import com.demo.service.ConductorService;
 import com.demo.service.TicketService;
 import com.demo.service.UserService;
 
@@ -77,8 +76,6 @@ public class AdminController {
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private ConductorService conductorService;
 
 	@GetMapping("/dashboard")
 	public ResponseEntity<?> getAdminDashboard() {
@@ -136,7 +133,7 @@ public class AdminController {
 	
 	@PostMapping("/saveConductor")
 	public ResponseEntity<Map<String, String>> createConductor(
-	    @Valid @RequestBody ConductorRegisterRequest registerRequest, BindingResult result) {
+	    @Valid @RequestBody ConductorRegisterRequest conductorRequest, BindingResult result) {
 		
 	    Map<String, String> response = new HashMap<>();
 
@@ -148,17 +145,19 @@ public class AdminController {
 	    }
 
 	    try {
-	        if (userService.existsByEmail(registerRequest.getEmail())) {
-	            response.put("email", "Email is already taken");
-	            return ResponseEntity.badRequest().body(response);
-	        }
-	        if (userService.existsByPhoneNo(registerRequest.getPhoneNo())) {
-	            response.put("phoneNo", "Phone number is already taken");
-	            return ResponseEntity.badRequest().body(response);
-	        }
+	    
+	    	Optional<Conductor> existingConductor = conductorRepo.findByPhoneNo(conductorRequest.getPhoneNo());
+		    if (existingConductor.isPresent()) {
+		        response.put("phoneNo", "Phone number already exists for another Conductor");
+		        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		    }
+	        
+	        Conductor conductor = new Conductor();
+		    conductor.setName(conductorRequest.getName());
+		    conductor.setPhoneNo(conductorRequest.getPhoneNo());
+		    conductor.setSalary(conductorRequest.getSalary());
 
-	        // Save conductor using the service
-	        conductorService.addConductor(registerRequest);
+	        conductorRepo.save(conductor);
 
 	        response.put("message", "Conductor registered successfully");
 	        return ResponseEntity.ok(response);
@@ -177,6 +176,17 @@ public class AdminController {
 			return new ResponseEntity<>(driverList, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+	}
+	@GetMapping("/getConductor")
+	public ResponseEntity<?> getAllConductor()
+	{
+		List<Conductor> condList = conductorRepo.findAll();
+		if (condList != null && !condList.isEmpty()) { 
+	        return new ResponseEntity<>(condList, HttpStatus.OK);
+	    }
+	    
+	    return new ResponseEntity<>("No Conductor Available", HttpStatus.NOT_FOUND);
 		
 	}
 	
@@ -269,7 +279,7 @@ public class AdminController {
 	                bus.getTotalSeats(),
 	                bus.getTicketPrice(),
 	                bus.getDriver().getName(),  
-	                bus.getConductor().getUser().getName())).collect(Collectors.toList());
+	                bus.getConductor().getName())).collect(Collectors.toList());
 
 	        return new ResponseEntity<>(busRespoonse, HttpStatus.OK);
 	    }
@@ -277,27 +287,6 @@ public class AdminController {
 	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("/getConductor")
-	public ResponseEntity<?> getAllConductor()
-	{
-		List<Conductor> condList = conductorRepo.findAll();
-		if (condList != null && !condList.isEmpty()) {
-			
-			  List<ConductorResponse> conductorResponse = condList.stream().map(cond ->
-			  new ConductorResponse( 
-					  cond.getId(), 
-					  cond.getUser().getName(),
-					  cond.getUser().getEmail(),
-					  cond.getUser().getPassword(),
-					  cond.getUser().getPhoneNo(),
-					  cond.getSalary())).collect(Collectors.toList());
-			 
-	        return new ResponseEntity<>(conductorResponse, HttpStatus.OK);
-	    }
-	    
-	    return new ResponseEntity<>("No Conductor Available", HttpStatus.NOT_FOUND);
-		
-	}
 
 	
 	@GetMapping("/ticket")

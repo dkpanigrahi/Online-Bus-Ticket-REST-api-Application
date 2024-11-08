@@ -29,11 +29,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
 
-        // Check if the user is a conductor by looking for them in the Conductor entity
-        boolean isConductor = conductorRepository.existsByUser(user);
-
         // Get authorities (e.g., ROLE_CONDUCTOR) based on whether the user is a conductor or not
-        String role = isConductor ? "ROLE_CONDUCTOR" : user.getRole();
+        String role = user.getRole();
 
         // Return UserDetails object with appropriate role
         return org.springframework.security.core.userdetails.User

@@ -63,7 +63,7 @@ public class PublicController {
 		                bus.getTotalSeats(),
 		                bus.getTicketPrice(),
 		                bus.getDriver().getName(),  
-		                bus.getConductor().getUser().getName())).collect(Collectors.toList());
+		                bus.getConductor().getName())).collect(Collectors.toList());
 
 		        return new ResponseEntity<>(busRespoonse, HttpStatus.OK);
 		    }
