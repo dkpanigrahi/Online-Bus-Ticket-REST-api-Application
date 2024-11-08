@@ -1,9 +1,7 @@
 export interface Conductor {
-  id?:number  
-  name: string;
-    email:string;
-    password:string
+  id? : number;
+    name: string;
     phoneNo: string;
-    salary:number;
+    salary: string;
   }
   

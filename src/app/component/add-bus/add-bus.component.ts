@@ -56,17 +56,10 @@ export class AddBusComponent implements OnInit {
 
 loadConductors() {
   this.service.getConductors().subscribe({
-      next: (conductors: any[]) => {
-          console.log('Original Conductors:', conductors); // Check the original response
-          this.conductorList = conductors.map(conductor => ({
-              id: conductor.id,
-              name: conductor.user.name,
-              email: conductor.user.email,
-              password: conductor.user.password,
-              phoneNo: conductor.user.phoneno, 
-              salary: conductor.salary
-          }));
-          console.log('Transformed Conductors:', this.conductorList); 
+      next: (conductors: Conductor[]) => {
+          console.log('Original Conductors:', conductors); 
+          this.conductorList = conductors;
+         
       },
       error: (error) => {
           console.error('Error loading conductors', error);

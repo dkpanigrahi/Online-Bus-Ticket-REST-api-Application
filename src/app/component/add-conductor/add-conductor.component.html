@@ -19,21 +19,6 @@
                           </div>   
                     </div>
 
-                    <div class="mb-2">
-                        <label for="name">Enter Email:</label>
-                        <input class="form-control" type="email" id="email" [(ngModel)]="conductor.email" required />
-                        <div *ngIf="errorMessages['email']" class="error">
-                            <small class="text-danger">{{ errorMessages['email'] }}</small>
-                          </div>   
-                    </div>
-
-                    <div class="mb-2">
-                        <label for="name">Enter Password:</label>
-                        <input class="form-control" type="password" id="password" [(ngModel)]="conductor.password" required />
-                        <div *ngIf="errorMessages['password']" class="error">
-                            <small class="text-danger">{{ errorMessages['password'] }}</small>
-                          </div>   
-                    </div>
                     
                     <div class="mb-2">
                         <label for="phoneno">Phone Number:</label>

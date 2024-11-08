@@ -1,11 +1,9 @@
 export interface ConductorResponce {
 
     
-        id:number  
-        name: string;
-          email:string;
-          password:string
-          phoneNo: string;
-          salary:number;
+  id : number;
+  name: string;
+  phoneNo: string;
+  salary: string;
         
 }

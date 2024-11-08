@@ -14,10 +14,8 @@ import { FormsModule } from '@angular/forms';
 export class AddConductorComponent {
   conductor: Conductor = {
     name: '',
-    email:'',
-    password:'',
     phoneNo: '',
-    salary: 0
+    salary: ''
   };
   message: string = '';
   errorMessages: { [key: string]: string } = {};
@@ -35,10 +33,8 @@ export class AddConductorComponent {
         console.log('Conductor saved successfully', response);
         this.message = response.message;
         this.conductor.name='';
-        this.conductor.email='';
-        this.conductor.password='';
         this.conductor.phoneNo='';
-        this.conductor.salary=0; 
+        this.conductor.salary=''; 
       },
       error: (errorResponse) => {
         // Check if there are specific field errors returned from the backend
