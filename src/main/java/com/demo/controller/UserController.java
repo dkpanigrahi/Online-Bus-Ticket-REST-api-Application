@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,12 +28,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.BusResponse;
 import com.demo.dto.TicketBookingRequest;
+import com.demo.dto.TicketResponse;
 import com.demo.dto.UserResponse;
 import com.demo.entity.Booking;
 import com.demo.entity.Bus;
+import com.demo.entity.Driver;
+import com.demo.entity.Ticket;
 import com.demo.entity.User;
 import com.demo.repository.BookingRepository;
 import com.demo.repository.BusRepository;
+import com.demo.repository.TicketRepository;
 import com.demo.service.BookingService;
 import com.demo.service.UserService;
 
@@ -53,6 +58,9 @@ public class UserController {
 	
 	@Autowired
 	private BookingRepository bookingRepository;
+	
+	@Autowired
+	private TicketRepository ticketRepository;
 
 	@GetMapping("/profile")
 	public ResponseEntity<?> getAdminDashboard() {
@@ -139,16 +147,17 @@ public class UserController {
 	@Transactional
 	@PostMapping("/bookTicket")
 	public ResponseEntity<?> bookTicket(@RequestBody TicketBookingRequest bookingRequest) {
-		
-		String passengerName = bookingRequest.getPassengerName();
+
+	    List<String> passengerNames = bookingRequest.getPassengerNames();
 	    List<Integer> seatNos = bookingRequest.getSeatNumbers();
 	    String date = bookingRequest.getJourneyDate();
 	    int busId = bookingRequest.getBusId();
+
+	    Map<String, Object> responseMap = new HashMap<>();
 	    
-	    Map<String, String> responseMap = new HashMap<>();
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate bookingDate;
-	    
+
 	    try {
 	        bookingDate = LocalDate.parse(date, formatter);
 	    } catch (DateTimeParseException e) {
@@ -166,40 +175,85 @@ public class UserController {
 	        return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
 	    }
 
+	    // Check if the lists are of the same length
+	    if (passengerNames.size() != seatNos.size()) {
+	        responseMap.put("error", "Mismatch between passenger names and seat numbers.");
+	        return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+	    }
+
 	    // Check if seats are already booked or in process
 	    try {
-	    	synchronized (this) {
-		        for (Integer seatNo : seatNos) {
-		            Booking existingBooking = bookingRepository.findBySeatNoAndBookingDate(seatNo, bookingDate);
-		            if (existingBooking != null && (existingBooking.isBooked() || existingBooking.isInProcess())) {
-		                responseMap.put("error", "Seat " + seatNo + " is already booked or in process for this date");
-		                return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
-		            }
-		        }
+	        synchronized (this) {
+	            
+	        	List<Integer> bookingIds = new ArrayList<>();
+	            
+	            for (int i = 0; i < seatNos.size(); i++) {
+	                
+	            	Integer seatNo = seatNos.get(i);
+	                String name = passengerNames.get(i);
 
-		        // Create new bookings (temporarily lock the seats)
-		        for (Integer seatNo : seatNos) {
-		            Booking booking = new Booking();
-		            booking.setSeatNo(seatNo);
-		            booking.setPassengerName(passengerName);
-		            booking.setBookingDate(bookingDate);
-		            booking.setInProcess(true);  
-		            booking.setExpirationTime(LocalDateTime.now().plusMinutes(2)); // time holding
-		            booking.setUser(user.get());
-		            booking.setBus(bus);
+	                // Check if the seat is already booked or in process
+	                Booking existingBooking = bookingRepository.findBySeatNoAndBookingDate(seatNo, bookingDate);
+	                if (existingBooking != null && (existingBooking.isBooked() || existingBooking.isInProcess())) {
+	                    responseMap.put("error", "Seat " + seatNo + " is already booked or in process for this date");
+	                    return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+	                }
 
-		            bookingRepository.save(booking);
-		        }
-		        responseMap.put("message","Booking Successful. Proceed To paymeny..");
-			    return new ResponseEntity<>(responseMap,HttpStatus.CREATED);
-		    }
-		} catch (Exception e) {
-			responseMap.put("error", "failed Booking Ticket" + e.getMessage());
+	                // Create a new booking for each seat and assign the passenger name
+	                Booking booking = new Booking();
+	                booking.setSeatNo(seatNo);
+	                booking.setPassengerName(name);  // Assign corresponding passenger name
+	                booking.setBookingDate(bookingDate);
+	                booking.setInProcess(true);
+	                booking.setExpirationTime(LocalDateTime.now().plusMinutes(2));  // temporary lock time
+	                booking.setUser(user.get());
+	                booking.setBus(bus);
+
+	                Booking savedBooking = bookingRepository.save(booking);
+	                bookingIds.add(savedBooking.getId());
+	            }
+
+	            responseMap.put("message", "Booking Successful. Proceed To payment..");
+	            responseMap.put("bookingIds", bookingIds);  // Return booking IDs
+	            return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
+	        }
+	    } catch (Exception e) {
+	        responseMap.put("error", "Failed Booking Ticket: " + e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
-		}
-	    
-	    
+	    }
 	}
+	
+	
+	@GetMapping("/getTickets")
+	public ResponseEntity<?> getAllTickets() {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String userName = authentication.getName();
+	    Optional<User> user = userService.findByEmail(userName);
+
+	    if (user.isPresent()) {
+	        List<Ticket> ticketList = ticketRepository.findByUser(user.get());
+	        
+	        if (ticketList != null && !ticketList.isEmpty()) {
+	            List<TicketResponse> ticketDtos = ticketList.stream()
+	                .map(ticket -> new TicketResponse(
+	                	ticket.getId(),
+	                    ticket.getPassengerName(),
+	                    ticket.getSeatNo(),
+	                    ticket.getBus().getBusNo(),
+	                    ticket.getBus().getDepartureTime(),
+	                    ticket.getDate().toString()
+	                ))
+	                .collect(Collectors.toList());
+
+	            return new ResponseEntity<>(ticketDtos, HttpStatus.OK);
+	        }
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);   
+	    }
+	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+
+
 
 
 

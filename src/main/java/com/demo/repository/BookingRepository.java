@@ -22,6 +22,8 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
 	 List<Booking> findByUserAndInProcess(User user, boolean inProcess);
 	 
 	 List<Booking> findByBusIdAndBookingDateAndBookedTrue(int busId, LocalDate bookingDate);
+
+	
 	 
 	 
 }

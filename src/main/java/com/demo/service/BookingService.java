@@ -35,7 +35,7 @@ public class BookingService {
     }
 	
 	// Run this task every 5 minutes
-    @Scheduled(fixedRate = 100000)  // 300,000 milliseconds = 5 minutes
+    @Scheduled(fixedRate = 300000)  // 300,000 milliseconds = 5 minutes
     public void deleteExpiredBookings() {
         LocalDateTime now = LocalDateTime.now();
         

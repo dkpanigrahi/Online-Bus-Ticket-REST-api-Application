@@ -3,7 +3,8 @@ package com.demo.dto;
 import java.util.List;
 
 public class TicketBookingRequest {
-    private String passengerName;
+    
+	private List<String> passengerNames;
     
     private List<Integer> seatNumbers;
     
@@ -11,19 +12,15 @@ public class TicketBookingRequest {
     
     private String journeyDate;
     
+	public List<String> getPassengerNames() {
+		return passengerNames;
+	}
 
-    
-    public String getPassengerName() {
-        return passengerName;
-    }
+	public void setPassengerNames(List<String> passengerNames) {
+		this.passengerNames = passengerNames;
+	}
 
-    public void setPassengerName(String passengerName) {
-        this.passengerName = passengerName;
-    }
-
-   
-
-    public List<Integer> getSeatNumbers() {
+	public List<Integer> getSeatNumbers() {
         return seatNumbers;
     }
 

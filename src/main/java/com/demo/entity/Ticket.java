@@ -1,11 +1,14 @@
 package com.demo.entity;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 
 @Entity
@@ -17,15 +20,17 @@ public class Ticket {
 	
 	private String passengerName;
 	
-	private int seatno;
+	private Integer seatNo;
 	
 	private LocalDate date;
-	
+
 	@ManyToOne
 	private User user;//One User can have Multiple Ticket
 	
 	@ManyToOne
 	private Bus bus;//One Bus Can have Multiple Ticket
+	
+	private String transactionId;
 
 	public int getId() {
 		return id;
@@ -36,21 +41,21 @@ public class Ticket {
 	}
 
 	public String getPassengerName() {
-	    return passengerName;
+		return passengerName;
 	}
 
 	public void setPassengerName(String passengerName) {
-	    this.passengerName = passengerName;
+		this.passengerName = passengerName;
 	}
 
 	
 
-	public int getSeatno() {
-		return seatno;
+	public Integer getSeatNo() {
+		return seatNo;
 	}
 
-	public void setSeatno(int seatno) {
-		this.seatno = seatno;
+	public void setSeatNo(Integer seatNo) {
+		this.seatNo = seatNo;
 	}
 
 	public LocalDate getDate() {
@@ -76,5 +81,18 @@ public class Ticket {
 	public void setBus(Bus bus) {
 		this.bus = bus;
 	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	
+	
+
+	
 
 }

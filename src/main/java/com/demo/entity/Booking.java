@@ -2,6 +2,7 @@ package com.demo.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
-    private int seatNo;
+    private Integer seatNo;
     
     private String passengerName;
     
@@ -53,12 +54,14 @@ public class Booking {
         this.id = id;
     }
 
+    
+    
 
-    public int getSeatNo() {
+	public Integer getSeatNo() {
 		return seatNo;
 	}
 
-	public void setSeatNo(int seatNo) {
+	public void setSeatNo(Integer seatNo) {
 		this.seatNo = seatNo;
 	}
 
@@ -109,4 +112,8 @@ public class Booking {
 	public void setPassengerName(String passengerName) {
 		this.passengerName = passengerName;
 	}
+
+	
+
+	
 }
