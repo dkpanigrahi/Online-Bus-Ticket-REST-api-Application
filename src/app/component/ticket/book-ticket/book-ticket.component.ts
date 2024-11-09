@@ -4,38 +4,34 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { Busresponse } from '../../../model/busresponse';
-import { time } from 'node:console';
 
 @Component({
   selector: 'app-book-ticket',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './book-ticket.component.html',
   styleUrls: ['./book-ticket.component.css']
 })
 export class BookTicketComponent {
-
   busId: number;
   date: string;
-  seatMap: { [key: number]: boolean } = {}; 
-  passengerName: string = '';
-  selectedSeats: { [key: string]: boolean } = {}; 
-  busDetails : Busresponse={
-    id:0,
-    busNo:'',
-    startPlace:'',
+  seatMap: { [key: number]: boolean } = {};
+  selectedSeatsArray: number[] = [];
+  passengerNames: string[] = [];
+  busDetails: Busresponse = {
+    id: 0,
+    busNo: '',
+    startPlace: '',
     destination: '',
-    departureTime: '', 
+    departureTime: '',
     totalSeats: 0,
     ticketPrice: 0,
     driverName: '',
-    conductorName:'',
+    conductorName: '',
     availableEveryDay: true,
-    specificDays:[],
-  }
-
+    specificDays: [],
+  };
   totalPrice: number = 0;
-
   message: string = '';
   errorMessages: { [key: string]: string } = {};
 
@@ -71,74 +67,72 @@ export class BookTicketComponent {
     });
   }
 
-   // Calculate total price based on selected seats
-   calculateTotalPrice() {
-    const selectedCount = Object.values(this.selectedSeats).filter(value => value).length;
-    this.totalPrice = selectedCount * this.busDetails.ticketPrice;
+  // Method to get seat keys for the template
+  getSeatKeys(): number[] {
+    return Object.keys(this.seatMap).map(key => +key);
   }
 
-  isAnySeatSelected(): boolean {
-    return Object.values(this.selectedSeats).some(seat => seat === true);
-  }
-  
+  // Toggle seat selection and directly update the selectedSeatsArray
+  toggleSeatSelection(seatNumber: number) {
+    const seatIndex = this.selectedSeatsArray.indexOf(seatNumber);
 
-  // This method can be called whenever a seat is selected/deselected
-  onSeatSelectionChange() {
+    if (seatIndex === -1) {
+      this.selectedSeatsArray.push(seatNumber);
+    } else {
+      this.selectedSeatsArray.splice(seatIndex, 1);
+    }
+
+    this.passengerNames = Array(this.selectedSeatsArray.length).fill('');
     this.calculateTotalPrice();
   }
 
+  calculateTotalPrice() {
+    this.totalPrice = this.selectedSeatsArray.length * this.busDetails.ticketPrice;
+  }
+
+  isAllPassengerNamesFilled(): boolean {
+    return this.passengerNames.every(name => name.trim() !== '');
+  }
+
   bookTicket() {
-    const selectedSeatsArray = Object.keys(this.selectedSeats)
-    .filter(seat => this.selectedSeats[seat])
-    .map(seat => parseInt(seat, 10)); 
+    if (!this.isAllPassengerNamesFilled()) {
+      this.message = 'Please enter names for all passengers.';
+      return;
+    }
+
     const bookingData = {
-        passengerName: this.passengerName,
-        seatNumbers: selectedSeatsArray,
-        journeyDate: this.date,
-        busId: this.busId
+      passengerNames: this.passengerNames,
+      seatNumbers: this.selectedSeatsArray,
+      journeyDate: this.date,
+      busId: this.busId
     };
 
-    if (selectedSeatsArray.length > 0) {
-        this.service.bookTicket(bookingData).subscribe({
-            next: (response) => {
-                console.log("Booking Successful",response);
-                this.message = response.message;
-                // Prepare data for navigation to the payment pass
-                
-                this.router.navigate(['/payment-page'], { 
-                  state: { passengerName: this.passengerName, 
-                           busNumber:this.busDetails.busNo,
-                           busNo:this.busDetails.id,
-                           from:this.busDetails.startPlace,
-                           to:this.busDetails.destination,
-                           time:this.busDetails.departureTime,
-                           amount:this.totalPrice,
-                           date:this.date,
-                           seatNo:selectedSeatsArray
-                          } });
+    this.service.bookTicket(bookingData).subscribe({
+      next: (response) => {
+        console.log("Booking Successful", response);
+        const bookingIds = response.bookingIds;
+        this.message = response.message;
 
-            },
-            error: (error) => {
-              console.error('Error:', error.error);
-              this.message = '';
-
-                      // Handle specific validation errors from the backend (if any)
-              if (error.status === 400) {
-                if (error.error && typeof error.error === 'object') {
-                  this.errorMessages = error.error;  // Assuming the backend returns field-specific error messages
-                } else {
-                  this.errorMessages['general'] = 'Invalid input data. Please check your form values.';
-                }
-              } else {
-                this.errorMessages['general'] = 'An unexpected error occurred.';
-              }
-            }
+        this.router.navigate(['/payment-page'], { 
+          state: { 
+            passengerNames: this.passengerNames,
+            busNumber: this.busDetails.busNo,
+            busNo: this.busDetails.id,
+            from: this.busDetails.startPlace,
+            to: this.busDetails.destination,
+            time: this.busDetails.departureTime,
+            amount: this.totalPrice,
+            date: this.date,
+            seatNo: this.selectedSeatsArray,
+            bookingIds: bookingIds
+          } 
         });
-    } else {
-        console.log("No seats selected.");
-        this.message="No seat selected...";
-    }
-}
-
-  
+      },
+      error: (error) => {
+        console.error('Error:', error.error);
+        this.message = '';
+        this.errorMessages['general'] = 'An unexpected error occurred.';
+      }
+    });
+  }
 }

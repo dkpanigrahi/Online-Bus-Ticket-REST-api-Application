@@ -15,6 +15,9 @@ import { ViewUserComponent } from './component/view-user/view-user.component';
 import { ProfileComponent } from './component/profile/profile.component';
 import { BookTicketComponent } from './component/ticket/book-ticket/book-ticket.component';
 import { PaymentPageComponent } from './component/ticket/payment-page/payment-page.component';
+import { SuccesspageComponent } from './component/ticket/successpage/successpage.component';
+import { UserTicketComponent } from './component/user-ticket/user-ticket.component';
+import { SearchBusComponent } from './component/search-bus/search-bus.component';
 
 export const routes: Routes = [
     {
@@ -104,7 +107,25 @@ export const routes: Routes = [
         component:PaymentPageComponent,
         canActivate:[authGuard],
         data:{role: ['ROLE_ADMIN', 'ROLE_USER'] }
-      }
+      },
+      { 
+        path: 'success',
+        component: SuccesspageComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_ADMIN', 'ROLE_USER'] }  
+      },
+      { 
+        path: 'user-tickets',
+        component: UserTicketComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_USER'] }  
+      },
+      { 
+        path: 'bus',
+        component: SearchBusComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_USER'] }  
+      },
       
       
 ];

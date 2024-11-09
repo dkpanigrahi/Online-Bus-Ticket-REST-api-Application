@@ -1,0 +1,17 @@
+.success-message-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .success-message-container h2 {
+    color: green;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  button {
+    margin: 10px;
+  }
+  

@@ -1,83 +1,41 @@
-<div class="container p-4">
-    <div class="row">
-      <!-- Bus Information Div (Left Side) -->
-      <div class="col-md-3 mb-4 d-flex justify-content-start">
-        <div class="card bus-info-card">
-          <div class="card-body text-start p-3">
-            <h5 class="mb-4 text-center">Bus Information</h5>
-            <p>Bus Number: {{ busDetails.busNo }}</p>
-            <p>Start Place: {{ busDetails.startPlace }}</p>
-            <p>Destination: {{ busDetails.destination }}</p>
-            <p>Time: {{ busDetails.departureTime }}</p>
-            <p>Ticket Price: {{ busDetails.ticketPrice }}</p>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Main Form Div (Right Side, aligned closer to the left) -->
-<div class="col-md-8 form-container">
-  <div class="card">
-    <div class="text-center">
-      <h5>Passenger Information</h5>
-    </div>
-    <div *ngIf="message" class="text-center text-danger">{{ message }}</div>
-    <div *ngIf="errorMessages['error']" class="text-center text-error">
-      <small>{{ errorMessages['error'] }}</small>
-    </div>
-    <div class="card-body">
-      <form (ngSubmit)="bookTicket()">
-        <div class="form-group mb-3">
-          <label for="passengerName">Enter Passenger Name</label>
-          <input 
-            id="passengerName" 
-            class="form-control" 
-            type="text" 
-            [(ngModel)]="passengerName" 
-            name="passengerName" 
-            required
-            #passengerNameRef="ngModel" 
-          />
-          <!-- Error message if Passenger Name is empty -->
-          <div *ngIf="passengerNameRef.invalid && passengerNameRef.touched" class="text-danger">
-            Passenger name is required.
-          </div>
-        </div>
 
-        <div class="form-group mb-2">
-          <label for="seatno">Select Seat Number</label>
-          <div class="form-group scrollable-seat-list">
-            <ul class="list-group">
-              <li *ngFor="let seat of seatMap | keyvalue" class="list-group-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    name="seat"
-                    [value]="seat.key"
-                    [(ngModel)]="selectedSeats[seat.key]"
-                    [disabled]="seat.value"
-                    (change)="onSeatSelectionChange()" 
-                  />
-                  <span [ngClass]="{'available-seat': !seat.value, 'booked-seat': seat.value}">
-                    Seat {{ seat.key }} - {{ seat.value ? 'Booked' : 'Available' }}
-                  </span>
-                </label>
-              </li>
-            </ul>
-          </div>
-        </div>
+<div class="container mt-4">
+  <h2>Book Your Ticket</h2>
+  <p>Bus Number: {{ busDetails.busNo }}</p>
+  <p>From: {{ busDetails.startPlace }} - To: {{ busDetails.destination }}</p>
+  <p>Date: {{ date }}</p>
 
-        <div class="form-group">
-          <p>Travel Date: {{ date }}</p>
-        </div>
-
-        <div class="form-group">
-          <label>Total Price:</label>
-          <span>{{ totalPrice | currency }}</span>
-        </div>
-
-        <!-- Disable button unless passengerName is entered and at least one seat is selected -->
-        <button type="submit" class="btn btn-success mt-2" [disabled]="!passengerName || !isAnySeatSelected()">Book Ticket</button>
-      </form>
+  <!-- Seat Selection -->
+  <div class="seat-map mt-3">
+    <h4>Select Your Seats</h4>
+    <div class="seats">
+      <button *ngFor="let seat of getSeatKeys()"
+              [disabled]="seatMap[seat]" 
+              [class.selected]="selectedSeatsArray.includes(seat)"
+              (click)="toggleSeatSelection(seat)">
+        {{ seat }}
+      </button>
     </div>
   </div>
+  
+
+  <!-- Selected Seats and Passenger Names -->
+  <div *ngIf="selectedSeatsArray.length > 0" class="mt-4">
+    <h4>Selected Seats: {{ selectedSeatsArray.join(', ') }}</h4>
+    <div *ngFor="let seat of selectedSeatsArray; let i = index" class="form-group">
+      <label for="passengerName{{ i }}">Passenger Name (Seat {{ seat }}):</label>
+      <input type="text" id="passengerName{{ i }}" class="form-control" [(ngModel)]="passengerNames[i]" placeholder="Enter passenger name" required>
+    </div>
+  </div>
+
+  <!-- Total Price -->
+  <div class="mt-3">
+    <h4>Total Price: ₹{{ totalPrice }}</h4>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="message" class="alert alert-danger">{{ message }}</div>
+
+  <!-- Book Ticket Button -->
+  <button class="btn btn-primary mt-3" (click)="bookTicket()">Book Ticket</button>
 </div>

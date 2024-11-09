@@ -10,7 +10,7 @@
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/user-home">Home</button>
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/bus">Search Bus</button>
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/pricing">Book Ticket</button>
-  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/view-tickets">View Ticket</button>
+  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/user-tickets">View Ticket</button>
 
   <!-- Admin View: When Logged In as Admin -->
   <button *ngIf="isLoggedIn && isAdmin" mat-button routerLink="/admin-home">Home</button>

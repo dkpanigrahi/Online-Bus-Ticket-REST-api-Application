@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Profile } from '../app/model/profile';
 import { Busresponse } from '../app/model/busresponse';
+import { TicketResponse } from '../app/model/ticket-response';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,12 @@ export class UserService {
     const headers = this.getAuthHeaders();
     console.log(bookingData);
     return this.http.post(`${this.baseUrl}/bookTicket`, bookingData, { headers });
+  }
+
+  //fetch all tickets
+  getTickets(): Observable<TicketResponse[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<TicketResponse[]>(`${this.baseUrl}/getTickets`, { headers });
   }
   
   
