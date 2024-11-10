@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar  class="custom-navbar">
   <img src="jayabilas.png" class="navbar-logo">
 
   <!-- Public View: When Not Logged In -->
@@ -9,7 +9,7 @@
   <!-- User View: When Logged In as Regular User -->
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/user-home">Home</button>
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/bus">Search Bus</button>
-  <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/pricing">Book Ticket</button>
+  
   <button *ngIf="isLoggedIn && !isAdmin" mat-button routerLink="/user-tickets">View Ticket</button>
 
   <!-- Admin View: When Logged In as Admin -->

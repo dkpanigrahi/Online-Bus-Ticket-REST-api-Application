@@ -1,0 +1,49 @@
+/* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+/* Card Styling */
+.card {
+  position: relative;
+  overflow: hidden;
+  height: 100vh; /* Full screen height */
+}
+
+.card-img-overlay {
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for readability */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 20px; /* Padding for left alignment */
+  text-align: left;
+}
+
+/* Typography */
+.welcome-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.5rem;
+  color: #28a745; /* Bootstrap Success Color */
+  margin-bottom: 10px;
+}
+
+.slogan {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: #f8f9fa; /* Light color for readability */
+  margin: 0;
+}
+
+/* Button Styling */
+.btn-success {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838; /* Darker shade on hover */
+}
