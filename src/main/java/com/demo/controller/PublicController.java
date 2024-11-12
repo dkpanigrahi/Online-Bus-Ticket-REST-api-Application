@@ -55,6 +55,7 @@ public class PublicController {
 		            new BusResponse(
 		                bus.getId(),
 		                bus.getBusNo(),
+		                bus.getCoach(),
 		                bus.getStartPlace(),
 		                bus.getDestination(),
 		                bus.getDepartureTime(),

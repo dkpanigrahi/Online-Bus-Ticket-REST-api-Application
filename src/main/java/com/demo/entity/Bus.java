@@ -28,6 +28,8 @@ public class Bus {
     private String departureTime;
     
     private boolean availableEveryDay;
+    
+    private String coach;
 
     @ElementCollection
     private List<String> specificDays;
@@ -123,7 +125,15 @@ public class Bus {
         this.availableEveryDay = availableEveryDay;
     }
 
-    public List<String> getSpecificDays() {
+    public String getCoach() {
+		return coach;
+	}
+
+	public void setCoach(String coach) {
+		this.coach = coach;
+	}
+
+	public List<String> getSpecificDays() {
         return specificDays;
     }
 

@@ -238,6 +238,7 @@ public class AdminController {
 	        bus.setBusNo(busDto.getBusNo());
 	        bus.setStartPlace(busDto.getStartPlace());
 	        bus.setDestination(busDto.getDestination());
+	        bus.setCoach(busDto.getCoach());
 	        bus.setDepartureTime(busDto.getDepartureTime());	        
 	        bus.setTotalSeats(busDto.getTotalSeats());
 	        bus.setTicketPrice(busDto.getTicketPrice());
@@ -273,6 +274,7 @@ public class AdminController {
 	            new BusResponse(
 	                bus.getId(),
 	                bus.getBusNo(),
+	                bus.getCoach(),
 	                bus.getStartPlace(),
 	                bus.getDestination(),
 	                bus.getDepartureTime(),
@@ -333,8 +335,8 @@ public class AdminController {
 	@GetMapping("/conductorCount")
 	public ResponseEntity<?> getConductorCount()
 	{
-		String role = "ROLE_CONDUCTOR";
-		long c = userService.countUser(role);
+		
+		long c = conductorRepo.count();
 		return new ResponseEntity<>(c,HttpStatus.OK);		
 	}
 	

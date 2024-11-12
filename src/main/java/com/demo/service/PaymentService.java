@@ -112,6 +112,7 @@ public class PaymentService {
 	        // Mark booking as permanently booked and associate with the transaction
 	        booking.setBooked(true);
 	        booking.setInProcess(false);
+	        booking.setExpirationTime(null);
 	  
 	        bookingRepository.save(booking);
 

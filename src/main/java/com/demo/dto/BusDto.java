@@ -20,6 +20,9 @@ public class BusDto {
 
     @NotNull(message = "Departure time is required")
     private String departureTime;
+    
+    @NotNull(message = "Please Select Coach Type")
+    private String coach;
 
     @NotNull(message = "Total seats are required")
     @Min(value = 1, message = "Total seats must be at least 1")
@@ -119,4 +122,12 @@ public class BusDto {
     public void setSpecificDays(List<String> specificDays) {
         this.specificDays = specificDays;
     }
+
+	public String getCoach() {
+		return coach;
+	}
+
+	public void setCoach(String coach) {
+		this.coach = coach;
+	}
 }
