@@ -62,7 +62,8 @@
                           </div>
                       </div>
 
-                      <div class="mb-3">
+                      <div class="row mb-3">
+                        <div class="col-md-4">
                           <label>Choose Available Days:</label><br>
                           <input type="radio" id="everyDay" [(ngModel)]="busDto.availableEveryDay" name="availableDays" [value]="true" required> Every Day<br>
                           <input type="radio" id="specificDays" [(ngModel)]="busDto.availableEveryDay" name="availableDays" [value]="false"> Specific Days<br>
@@ -76,6 +77,20 @@
                               <input type="checkbox" (change)="toggleSpecificDay('Saturday', $event)" [checked]="isDaySelected('Saturday')"> Saturday<br>
                               <input type="checkbox" (change)="toggleSpecificDay('Sunday', $event)" [checked]="isDaySelected('Sunday')"> Sunday<br>
                           </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            
+                        </div>
+                          
+                        <div class="col-md-4">
+                            <label for="coachType">Choose Coach Type:</label><br>
+                            <select id="coachType" [(ngModel)]="busDto.coach" class="form-control">
+                              <option value="AC">AC</option>
+                              <option value="Non AC">Non AC</option>
+                            </select>
+                        </div>
+                          
                       </div>
                       
 

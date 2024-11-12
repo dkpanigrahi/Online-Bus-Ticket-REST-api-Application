@@ -16,10 +16,14 @@ export class SearchBusComponent {
   startPlace: string = '';
   destination: string = '';
   date: string = '';
-  buses: Busresponse[] = [];
+  allBuses: Busresponse[] = [];
+  filteredBuses: Busresponse[] = [];
   errorMessage: string = '';
 
   minDate: string = '';
+
+  selectedCoachType: string = '';
+  selectedTimeOfDay: string = '';
 
 
   constructor(private service: PublicServiceService,private router : Router) {}
@@ -27,19 +31,6 @@ export class SearchBusComponent {
   ngOnInit(): void {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
-  }
-
-
-  onSearch(): void {
-    this.service.searchBus(this.startPlace, this.destination, this.date).subscribe(
-      (data: Busresponse[]) => {
-        this.buses = data;
-      },
-      error => {
-        console.error('Error fetching buses:', error);
-        this.errorMessage = "No Bus Available For Selected Route & Date"
-      }
-    );
   }
 
   isLoggedIn(): boolean {
@@ -54,4 +45,40 @@ export class SearchBusComponent {
       alert('You must be logged in to book a bus.');
     }
   }
+
+  onSearch(): void {
+    this.service.searchBus(this.startPlace, this.destination, this.date).subscribe(
+      (data: Busresponse[]) => {
+        this.allBuses = data;        // Load all buses here
+        this.filteredBuses = [...this.allBuses]; // Initially show all buses
+        this.errorMessage = '';
+      },
+      error => {
+        console.error('Error fetching buses:', error);
+        this.errorMessage = "No Bus Available For Selected Route & Date";
+      }
+    );
+  }
+
+  applyFilters(): void {
+    this.filteredBuses = this.allBuses.filter((bus) => {
+      const matchesCoachType = !this.selectedCoachType || bus.coach === this.selectedCoachType;
+      const matchesTimeOfDay = this.filterByTimeOfDay(bus.departureTime);
+      return matchesCoachType && matchesTimeOfDay;
+    });
+  }
+
+  filterByTimeOfDay(departureTime: string): boolean {
+    if (!this.selectedTimeOfDay) return true;
+    
+    const [hours] = departureTime.split(':').map(Number);
+    const isMorning = hours >= 5 && hours < 12;
+    const isNight = hours >= 18 || hours < 24;
+
+    return (
+      (this.selectedTimeOfDay === 'Morning' && isMorning) ||
+      (this.selectedTimeOfDay === 'Night' && isNight)
+    );
+  }
+
 }

@@ -34,6 +34,7 @@ export class RegisterComponent {
         next: (response) => {
           this.message = response.message;
           this.errorMessages = {};
+          this.registerForm.reset();
         },
         error: (err) => {
           this.errorMessages = err.error;

@@ -13,6 +13,7 @@
               <tr>
                 <th>No.</th>
                 <th>Bus No</th>
+                <th>Coach</th>
                 <th>StartPlace</th>
                 <th>Destination</th>
                 <th>Departure Time</th>
@@ -28,6 +29,7 @@
               <tr *ngFor="let b of bus; let i = index">
                 <td>{{ i + 1 }}</td>
                 <td>{{ b.busNo}}</td>
+                <td>{{ b.coach}}</td>
                 <td>{{ b.startPlace }}</td>
                 <td>{{ b.destination }}</td>
                 <td>{{ b.departureTime }}</td>

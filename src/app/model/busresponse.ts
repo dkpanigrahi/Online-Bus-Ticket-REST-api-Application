@@ -1,6 +1,7 @@
 export interface Busresponse {
   id:number,
   busNo: string;
+  coach:string;
   startPlace: string;
   destination: string;
   departureTime: string; 

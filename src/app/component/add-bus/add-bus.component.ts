@@ -21,6 +21,7 @@ export class AddBusComponent implements OnInit {
     startPlace: '',
     destination: '',
     departureTime: '',
+    coach:'',
     totalSeats: 0,
     ticketPrice: 0,
     availableEveryDay: true,
@@ -80,6 +81,20 @@ loadConductors() {
     this.service.createBus(busDataWithoutId).subscribe({
       next: (response) => {
         console.log('Bus saved successfully', response);
+        this.busDto = {
+          id: 0,
+          busNo: '',
+          startPlace: '',
+          destination: '',
+          departureTime: '',
+          coach: '',
+          totalSeats: 0,
+          ticketPrice: 0,
+          availableEveryDay: true,
+          specificDays: [],
+          driverId: 0,
+          conductorId: 0
+        };
         this.message = response.message;
       },
       error: (errorResponse) => {

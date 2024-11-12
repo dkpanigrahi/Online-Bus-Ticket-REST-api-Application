@@ -21,6 +21,7 @@ export class BookTicketComponent {
   busDetails: Busresponse = {
     id: 0,
     busNo: '',
+    coach:'',
     startPlace: '',
     destination: '',
     departureTime: '',
