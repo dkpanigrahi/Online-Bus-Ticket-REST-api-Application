@@ -1,0 +1,111 @@
+<div class="container mt-3">
+  <span class="text-center text-secondary"><h4>All Ticket Details</h4></span>
+</div>
+
+<!-- Search and Filter -->
+<div class="container mt-3">
+  <div class="row">
+    <!-- Search by Transaction ID -->
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by Transaction ID"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+      />
+    </div>
+
+    <!-- Filter by Date -->
+    <div class="col-md-4">
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="filterDate"
+        (change)="applyFilters()"
+      />
+    </div>
+
+    <!-- Filter by Bus Number -->
+    <div class="col-md-4">
+      <select
+        class="form-control"
+        [(ngModel)]="filterBusNo"
+        (change)="applyFilters()"
+      >
+        <option value="">All Buses</option>
+        <option *ngFor="let busNo of uniqueBusNumbers" [value]="busNo">
+          {{ busNo }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<!-- Tickets Table -->
+<div class="container mt-3 custom-container-width">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card shadow bg-body rounded">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Passenger Name</th>
+              <th>Bus No</th>
+              <th>Departure Time</th>
+              <th>SeatNo</th>
+              <th>Transaction Id</th>
+              <th>Date</th>
+              <th>User Id</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ticket of paginatedTickets">
+              <td>{{ ticket.passengerName }}</td>
+              <td>{{ ticket.busNo }}</td>
+              <td>{{ ticket.departureTime }}</td>
+              <td>{{ ticket.seatNo }}</td>
+              <td>{{ ticket.transactionId }}</td>
+              <td>{{ ticket.date }}</td>
+              <td>{{ ticket.userId }}</td>
+              <td>
+                <div class="d-flex justify-content-between">
+                  <button
+                    class="btn btn-sm btn-primary ms-1"
+                    (click)="viewTicket(ticket.id)"
+                  >
+                    View
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="filteredTickets.length === 0">
+              <td colspan="8" class="text-center">No tickets found.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center p-2">
+          <button
+            class="btn btn-sm btn-secondary"
+            [disabled]="currentPage === 1"
+            (click)="prevPage()"
+          >
+            Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button
+            class="btn btn-sm btn-secondary"
+            [disabled]="currentPage === totalPages"
+            (click)="nextPage()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

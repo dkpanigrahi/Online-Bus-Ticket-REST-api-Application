@@ -5,4 +5,6 @@ export interface TicketResponse {
   busNo: string;
   departureTime: string;
   date: string;
+  transactionId: string;
+  userId: number
 }

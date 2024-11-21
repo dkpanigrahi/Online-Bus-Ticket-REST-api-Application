@@ -9,6 +9,7 @@ import { Busresponse } from '../app/model/busresponse';
 import { ConductorResponce } from '../app/model/conductor-responce';
 import { DriverResponse } from '../app/model/driver-response';
 import { UserList } from '../app/model/user-list';
+import { TicketResponse } from '../app/model/ticket-response';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,7 @@ export class AdminService {
   // Create a new bus
   createBus(bus: any): Observable<any> {
     const headers = this.getAuthHeaders();
+    console.log(bus);
     return this.http.post<any>(`${this.baseUrl}/createBus`, bus, {headers});
   }
 
@@ -71,6 +73,18 @@ export class AdminService {
   getAllBus(): Observable<Busresponse[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<Busresponse[]>(`${this.baseUrl}/bus`,{headers});
+  }
+
+  //fetch all ticket
+  getAllTicket():Observable<TicketResponse[]>{
+    const headers = this.getAuthHeaders();
+    return this.http.get<TicketResponse[]>(`${this.baseUrl}/ticket`,{headers})
+  }
+
+  //fetch all Bus Number
+  getAllBusNumber(): Observable<string[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<string[]>(`${this.baseUrl}/busNumber`,{headers});
   }
 
   //delete Bus

@@ -18,6 +18,7 @@ import { PaymentPageComponent } from './component/ticket/payment-page/payment-pa
 import { SuccesspageComponent } from './component/ticket/successpage/successpage.component';
 import { UserTicketComponent } from './component/user-ticket/user-ticket.component';
 import { SearchBusComponent } from './component/search-bus/search-bus.component';
+import { AdminTicketComponent } from './component/admin-ticket/admin-ticket.component';
 
 export const routes: Routes = [
     {
@@ -119,6 +120,12 @@ export const routes: Routes = [
         component: UserTicketComponent,
         canActivate: [authGuard], 
         data: { role: ['ROLE_USER'] }  
+      },
+      { 
+        path: 'admin-tickets',
+        component: AdminTicketComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_ADMIN'] }  
       },
       { 
         path: 'bus',

@@ -85,10 +85,13 @@
                           
                         <div class="col-md-4">
                             <label for="coachType">Choose Coach Type:</label><br>
-                            <select id="coachType" [(ngModel)]="busDto.coach" class="form-control">
+                            <select id="coachType" [(ngModel)]="busDto.coach" name="coach" class="form-control">
                               <option value="AC">AC</option>
                               <option value="Non AC">Non AC</option>
                             </select>
+                            <div *ngIf="errorMessages['coach']" class="error">
+                                <small class="text-danger">{{ errorMessages['coach'] }}</small>
+                              </div> 
                         </div>
                           
                       </div>
