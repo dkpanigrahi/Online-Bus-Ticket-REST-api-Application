@@ -31,6 +31,7 @@ import com.demo.dto.ConductorRegisterRequest;
 import com.demo.dto.ConductorResponse;
 import com.demo.dto.DriverRegisterRequest;
 import com.demo.dto.RegisterRequest;
+import com.demo.dto.TicketResponse;
 import com.demo.dto.UserResponse;
 import com.demo.entity.Bus;
 import com.demo.entity.Conductor;
@@ -291,6 +292,16 @@ public class AdminController {
 	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
 	}
 	
+	@GetMapping("/busNumber")
+	public ResponseEntity<?> getAllBusNumber() {
+	     List<String> busNoList = busService.getAllBusNumbers();
+	     
+	     if(busNoList != null && !busNoList.isEmpty()) {	     
+	    	 return new ResponseEntity<>(busNoList,HttpStatus.OK);
+	    }	    
+	    return new ResponseEntity<>("No Bus Number Available", HttpStatus.NOT_FOUND);
+	}
+	
 
 	
 	@GetMapping("/ticket")
@@ -298,7 +309,17 @@ public class AdminController {
 	{
 		List<Ticket> TicketList = ticketRepository.findAll();
 		if(TicketList != null && !TicketList.isEmpty()) {
-			return new ResponseEntity<>(TicketList, HttpStatus.OK);
+			List<TicketResponse> ticketResponse = TicketList.stream().map(ticket -> new TicketResponse(
+					ticket.getId(),
+                    ticket.getPassengerName(),
+                    ticket.getSeatNo(),
+                    ticket.getBus().getBusNo(),
+                    ticket.getBus().getDepartureTime(),
+                    ticket.getDate().toString(),
+                    ticket.getTransactionId(),
+                    ticket.getUser().getId()
+                    )).toList();
+			return new ResponseEntity<>(ticketResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity<>("No Ticket Available",HttpStatus.NOT_FOUND);
 		

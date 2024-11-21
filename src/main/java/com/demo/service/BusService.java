@@ -53,6 +53,12 @@ public class BusService {
     public long countBus() {
     	return busRepository.count();
     }
+    
+    public List<String> getAllBusNumbers() {
+        return busRepository.findAll().stream()
+                .map(Bus::getBusNo) 
+                .toList();
+    }
 
 	
 }

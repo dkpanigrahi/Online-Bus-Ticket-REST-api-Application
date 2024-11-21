@@ -13,13 +13,13 @@ public class TicketResponse {
 	private String departureTime;
     
 	private String date;
+	
+	private String transactionId;
+	
+	private int userId;
 
-	public TicketResponse() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public TicketResponse(int id, String passengerName, int seatNo, String busNo, String departureTime, String date) {
+	public TicketResponse(int id, String passengerName, int seatNo, String busNo, String departureTime, String date,
+			String transactionId, int userId) {
 		super();
 		this.id = id;
 		this.passengerName = passengerName;
@@ -27,6 +27,13 @@ public class TicketResponse {
 		this.busNo = busNo;
 		this.departureTime = departureTime;
 		this.date = date;
+		this.transactionId = transactionId;
+		this.userId = userId;
+	}
+
+	public TicketResponse() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -76,6 +83,24 @@ public class TicketResponse {
 	public void setDate(String date) {
 		this.date = date;
 	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	
 
 	
 }

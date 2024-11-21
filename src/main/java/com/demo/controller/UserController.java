@@ -241,7 +241,9 @@ public class UserController {
 	                    ticket.getSeatNo(),
 	                    ticket.getBus().getBusNo(),
 	                    ticket.getBus().getDepartureTime(),
-	                    ticket.getDate().toString()
+	                    ticket.getDate().toString(),
+	                    ticket.getTransactionId(),
+	                    ticket.getUser().getId()
 	                ))
 	                .collect(Collectors.toList());
 
