@@ -8,12 +8,11 @@ export class PaymentService {
 
   constructor(private http : HttpClient) { }
 
-  private baseUrl = 'http://localhost:8080/api/user/payment';
+  private baseUrl = 'http://localhost:8080/user/payment';
 
   // Get the Authorization headers
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('jwtToken');
-    console.log('JWT Token:', token); 
     return new HttpHeaders({
       'Authorization': `${token}`,
       'Content-Type': 'application/json'

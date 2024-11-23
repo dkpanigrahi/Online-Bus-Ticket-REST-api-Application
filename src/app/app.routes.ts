@@ -19,6 +19,7 @@ import { SuccesspageComponent } from './component/ticket/successpage/successpage
 import { UserTicketComponent } from './component/user-ticket/user-ticket.component';
 import { SearchBusComponent } from './component/search-bus/search-bus.component';
 import { AdminTicketComponent } from './component/admin-ticket/admin-ticket.component';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
 
 export const routes: Routes = [
     {
@@ -133,6 +134,11 @@ export const routes: Routes = [
         canActivate: [authGuard], 
         data: { role: ['ROLE_USER'] }  
       },
-      
+      { 
+        path: 'change-password',
+        component: ChangePasswordComponent,
+        canActivate: [authGuard], 
+        data: { role: ['ROLE_ADMIN', 'ROLE_USER'] }  
+      },
       
 ];

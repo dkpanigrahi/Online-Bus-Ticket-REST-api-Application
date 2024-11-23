@@ -1,46 +1,56 @@
+<ng-template #noTickets>
+  <p>No tickets found.</p>
+</ng-template>
 
-  <ng-template #noTickets>
-    <p>No tickets found.</p>
-  </ng-template>
+<div class="container mt-3">
+  <span class="text-center text-secondary"><h4>All Ticket Details</h4></span>
+</div>
 
-  <div class="container mt-3">
-    <span class="text-center text-secondary"><h4>All Ticket Details</h4></span>
-  </div>
-
-  <div class="container mt-3 custom-container-width">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card shadow bg-body rounded">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Passenger Name</th>
-                    <th>Bus No</th>
-                    <th>Departure Time</th>
-                    <th>SeatNo</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let ticket of tickets">
-                    <td>{{ ticket.passengerName }}</td>
-                    <td>{{ ticket.busNo }}</td>
-                    <td>{{ ticket.departureTime }}</td>
-                    <td>{{ ticket.seatNo }}</td>
-                    <td>{{ ticket.date }}</td>
-                    <td>
-                        <div class="d-flex justify-content-between">
-                          <button class="btn btn-sm btn-primary ms-1" (click)="viewTicket(ticket.id)">View</button>
-                        </div>
-                      </td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>
+<div class="container mt-3 custom-container-width">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow bg-body rounded">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Passenger Name</th>
+              <th>Bus No</th>
+              <th>Departure Time</th>
+              <th>Seat No</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ticket of tickets">
+              <td>{{ ticket.passengerName }}</td>
+              <td>{{ ticket.busNo }}</td>
+              <td>{{ ticket.departureTime }}</td>
+              <td>{{ ticket.seatNo }}</td>
+              <td>{{ ticket.date }}</td>
+              <td>
+                <span [ngClass]="getStatusClass(ticket.date)">
+                  {{ getStatus(ticket.date) }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex justify-content-between">
+                  <button class="btn btn-sm btn-primary" (click)="viewTicket(ticket.id)">
+                    View
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-danger"
+                    [disabled]="getStatus(ticket.date) === 'Completed'"
+                    (click)="cancelTicket(ticket.id)">
+                    Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-  
-
-  
+</div>

@@ -18,12 +18,11 @@ export class AdminService {
 
   constructor(private http : HttpClient) { }
 
-  private baseUrl = 'http://localhost:8080/api/admin';
+  private baseUrl = 'http://localhost:8080/admin';
 
   // Get the Authorization headers
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('jwtToken');
-    console.log('JWT Token:', token); 
     return new HttpHeaders({
       'Authorization': `${token}`,
       'Content-Type': 'application/json'
@@ -118,5 +117,16 @@ export class AdminService {
       const headers = this.getAuthHeaders();
       return this.http.get<number>(`${this.baseUrl}/userCount`,{headers});
     }
+
+     //change password
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    const body = {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+    
+    return this.http.post(`${this.baseUrl}/change-password`, body, { headers });
+  }
 
 }

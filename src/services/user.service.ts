@@ -12,12 +12,11 @@ export class UserService {
   
   constructor(private http : HttpClient) { }
 
-  private baseUrl = 'http://localhost:8080/api/user';
+  private baseUrl = 'http://localhost:8080/user';
 
   // Get the Authorization headers
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('jwtToken');
-    console.log('JWT Token:', token); 
     return new HttpHeaders({
       'Authorization': `${token}`,
       'Content-Type': 'application/json'
@@ -54,6 +53,17 @@ export class UserService {
   getTickets(): Observable<TicketResponse[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<TicketResponse[]>(`${this.baseUrl}/getTickets`, { headers });
+  }
+
+  //change password
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    const body = {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+    
+    return this.http.post(`${this.baseUrl}/change-password`, body, { headers });
   }
   
   
