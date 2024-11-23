@@ -44,4 +44,9 @@ public class UserService {
 	public List<User> getAllUserByRole(String role) {
 		return userRepository.findByRole(role);
 	}
+
+	public void save(User user) {
+		userRepository.save(user);
+		
+	}
 }

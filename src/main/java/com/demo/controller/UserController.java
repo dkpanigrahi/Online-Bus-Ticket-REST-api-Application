@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.BusResponse;
+import com.demo.dto.PasswordDto;
 import com.demo.dto.TicketBookingRequest;
 import com.demo.dto.TicketResponse;
 import com.demo.dto.UserResponse;
@@ -44,7 +46,7 @@ import com.demo.service.UserService;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
@@ -61,6 +63,9 @@ public class UserController {
 	
 	@Autowired
 	private TicketRepository ticketRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping("/profile")
 	public ResponseEntity<?> getAdminDashboard() {
@@ -255,6 +260,49 @@ public class UserController {
 	}
 
 
+
+	@PostMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto) {
+	    // Get the authenticated user's details
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String userName = authentication.getName();
+	    
+	    // Retrieve the user by email
+	    Optional<User> userOptional = userService.findByEmail(userName);
+	    
+	    if (userOptional.isPresent()) {
+	        User user = userOptional.get();
+	        String existingEncodedPassword = user.getPassword();
+	        Map<String,String> response = new HashMap<>();
+	        // PasswordEncoder for secure password matching
+	        if (passwordEncoder.matches(passwordDto.getOldPassword(), existingEncodedPassword)) {
+	      
+	            if (!isValidPassword(passwordDto.getNewPassword())) {
+	            	response.put("error","New password should have 6 character");
+	                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	            }
+	            
+	            // Encode and update the password
+	            String newEncodedPassword = passwordEncoder.encode(passwordDto.getNewPassword());
+	            user.setPassword(newEncodedPassword);
+	            userService.save(user);
+	            
+	            response.put("success","Password changed Successfully");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+	        } else {
+	        	response.put("error","Old Password Incorrect");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	        }
+	    }
+	    
+	    return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	}
+
+	// Example helper method for password validation
+	private boolean isValidPassword(String password) {
+	   
+	    return password.length() >= 6; 
+	}
 
 
 

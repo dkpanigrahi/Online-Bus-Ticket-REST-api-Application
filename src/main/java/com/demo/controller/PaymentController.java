@@ -28,7 +28,7 @@ import com.demo.service.PaymentService;
 import com.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/user/payment")
+@RequestMapping("/user/payment")
 public class PaymentController {
 	
 	@Autowired

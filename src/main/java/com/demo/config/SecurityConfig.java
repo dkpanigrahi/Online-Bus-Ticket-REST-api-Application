@@ -43,8 +43,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeRequests(authz -> authz
                 .requestMatchers("/api/auth/register", "/api/auth/login","/api/public/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

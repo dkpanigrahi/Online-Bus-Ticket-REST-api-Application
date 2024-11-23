@@ -30,6 +30,7 @@ import com.demo.dto.BusResponse;
 import com.demo.dto.ConductorRegisterRequest;
 import com.demo.dto.ConductorResponse;
 import com.demo.dto.DriverRegisterRequest;
+import com.demo.dto.PasswordDto;
 import com.demo.dto.RegisterRequest;
 import com.demo.dto.TicketResponse;
 import com.demo.dto.UserResponse;
@@ -50,7 +51,7 @@ import com.demo.service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 public class AdminController {
 	
 	@Autowired
@@ -367,6 +368,49 @@ public class AdminController {
 		String role = "ROLE_USER";
 		long c = userService.countUser(role);
 		return new ResponseEntity<>(c,HttpStatus.OK);		
+	}
+	
+	@PostMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordDto passwordDto) {
+	    // Get the authenticated user's details
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String userName = authentication.getName();
+	    
+	    // Retrieve the user by email
+	    Optional<User> userOptional = userService.findByEmail(userName);
+	    
+	    if (userOptional.isPresent()) {
+	        User user = userOptional.get();
+	        String existingEncodedPassword = user.getPassword();
+	        Map<String,String> response = new HashMap<>();
+	        // PasswordEncoder for secure password matching
+	        if (passwordEncoder.matches(passwordDto.getOldPassword(), existingEncodedPassword)) {
+	      
+	            if (!isValidPassword(passwordDto.getNewPassword())) {
+	            	response.put("error","New password should have 6 character");
+	                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	            }
+	            
+	            // Encode and update the password
+	            String newEncodedPassword = passwordEncoder.encode(passwordDto.getNewPassword());
+	            user.setPassword(newEncodedPassword);
+	            userService.save(user);
+	            
+	            response.put("success","Password changed Successfully");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+	        } else {
+	        	response.put("error","Old Password Incorrect");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	        }
+	    }
+	    
+	    return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	}
+
+	// Example helper method for password validation
+	private boolean isValidPassword(String password) {
+	   
+	    return password.length() >= 6; 
 	}
 	
 	
