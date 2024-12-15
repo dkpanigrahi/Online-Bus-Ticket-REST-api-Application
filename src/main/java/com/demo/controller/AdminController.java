@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -288,6 +289,19 @@ public class AdminController {
 	                bus.getConductor().getName())).collect(Collectors.toList());
 
 	        return new ResponseEntity<>(busRespoonse, HttpStatus.OK);
+	    }
+	    
+	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
+	}
+	
+	
+	@GetMapping("/bus/{busId}")
+	public ResponseEntity<?> getBusById(@PathVariable int busId) {
+	    Bus bus = busService.getBusById(busId);
+	    
+	    if (bus != null) {
+
+	        return new ResponseEntity<>(bus, HttpStatus.OK);
 	    }
 	    
 	    return new ResponseEntity<>("No Bus Available", HttpStatus.NOT_FOUND);
