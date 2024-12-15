@@ -20,6 +20,7 @@ import { UserTicketComponent } from './component/user-ticket/user-ticket.compone
 import { SearchBusComponent } from './component/search-bus/search-bus.component';
 import { AdminTicketComponent } from './component/admin-ticket/admin-ticket.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { EditBusComponent } from './component/edit-bus/edit-bus.component';
 
 export const routes: Routes = [
     {
@@ -139,6 +140,12 @@ export const routes: Routes = [
         component: ChangePasswordComponent,
         canActivate: [authGuard], 
         data: { role: ['ROLE_ADMIN', 'ROLE_USER'] }  
+      },
+      {
+        path:'edit-bus/:busId',
+        component:EditBusComponent,
+        canActivate:[authGuard],
+        data:{role: ['ROLE_ADMIN'] }
       },
       
 ];

@@ -1,0 +1,127 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow p-2 bg-body rounded">
+                <div class=" text-center">
+                    <h3>Update Bus</h3>
+                    <div *ngIf="message" class="text-center text-success">{{ message }}</div>
+                    <div *ngIf="errorMessages['general']" class="text-center text-error">
+                        <small>{{ errorMessages['general'] }}</small>
+                      </div>
+                      <div *ngIf="errorMessages['error']" class="text-center text-error">
+                        <small>{{ errorMessages['error'] }}</small>
+                      </div>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="onSubmit()" #busForm="ngForm">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="busNo">Enter Bus No.</label>
+                                <input type="text" class="form-control" id="busNo" [(ngModel)]="busDto.busNo" name="busNo" required>
+                                <div *ngIf="errorMessages['busNo']" class="error">
+                                    <small class="text-danger">{{ errorMessages['busNo'] }}</small>
+                                  </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <label for="startPlace">Enter Start Place</label>
+                                <input type="text" class="form-control" id="startPlace" [(ngModel)]="busDto.startPlace" name="startPlace" required>
+                                <div *ngIf="errorMessages['startPlace']" class="error">
+                                    <small class="text-danger">{{ errorMessages['startPlace'] }}</small>
+                                  </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <label for="destination">Enter Destination Place</label>
+                                <input type="text" class="form-control" id="destination" [(ngModel)]="busDto.destination" name="destination" required>
+                                <div *ngIf="errorMessages['destination']" class="error">
+                                    <small class="text-danger">{{ errorMessages['destination'] }}</small>
+                                  </div> 
+                            </div>
+                        </div>
+  
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="departureTime">Enter Departure Time</label>
+                                <input type="time" class="form-control" id="departureTime" [(ngModel)]="busDto.departureTime" name="departureTime" required>
+                                <div *ngIf="errorMessages['departureTime']" class="error">
+                                    <small class="text-danger">{{ errorMessages['departureTime'] }}</small>
+                                  </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <label for="totalSeats">Enter Total Seats</label>
+                                <input type="number" class="form-control" id="totalSeats" [(ngModel)]="busDto.totalSeats" name="totalSeats" required>
+                                <div *ngIf="errorMessages['totalSeats']" class="error">
+                                    <small class="text-danger">{{ errorMessages['totalSeats'] }}</small>
+                                  </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ticketPrice">Enter Ticket Price</label>
+                                <input type="number" class="form-control" id="ticketPrice" [(ngModel)]="busDto.ticketPrice" name="ticketPrice" required>
+                                <div *ngIf="errorMessages['ticketPrice']" class="error">
+                                    <small class="text-danger">{{ errorMessages['ticketPrice'] }}</small>
+                                  </div> 
+                            </div>
+                        </div>
+  
+                        <div class="row mb-3">
+                          <div class="col-md-4">
+                            <label>Choose Available Days:</label><br>
+                            <input type="radio" id="everyDay" [(ngModel)]="busDto.availableEveryDay" name="availableDays" [value]="true" required> Every Day<br>
+                            <input type="radio" id="specificDays" [(ngModel)]="busDto.availableEveryDay" name="availableDays" [value]="false"> Specific Days<br>
+                        
+                            <div id="specificDaysOptions" *ngIf="!busDto.availableEveryDay">
+                                <input type="checkbox" (change)="toggleSpecificDay('Monday', $event)" [checked]="isDaySelected('Monday')"> Monday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Tuesday', $event)" [checked]="isDaySelected('Tuesday')"> Tuesday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Wednesday', $event)" [checked]="isDaySelected('Wednesday')"> Wednesday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Thursday', $event)" [checked]="isDaySelected('Thursday')"> Thursday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Friday', $event)" [checked]="isDaySelected('Friday')"> Friday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Saturday', $event)" [checked]="isDaySelected('Saturday')"> Saturday<br>
+                                <input type="checkbox" (change)="toggleSpecificDay('Sunday', $event)" [checked]="isDaySelected('Sunday')"> Sunday<br>
+                            </div>
+                          </div>
+  
+                          <div class="col-md-4">
+                              
+                          </div>
+                            
+                          <div class="col-md-4">
+                              <label for="coachType">Choose Coach Type:</label><br>
+                              <select id="coachType" [(ngModel)]="busDto.coach" name="coach" class="form-control">
+                                <option value="AC">AC</option>
+                                <option value="Non AC">Non AC</option>
+                              </select>
+                              <div *ngIf="errorMessages['coach']" class="error">
+                                  <small class="text-danger">{{ errorMessages['coach'] }}</small>
+                                </div> 
+                          </div>
+                            
+                        </div>
+                        
+  
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="driver">Select Driver</label>
+                                <select class="form-control" id="driver" [(ngModel)]="busDto.driverId" name="driverId" required>
+                                    <option *ngFor="let driver of driverList" [value]="driver.id">{{ driver.name }}</option>
+                                </select>
+                                <div *ngIf="errorMessages['driverId']" class="error">
+                                    <small class="text-danger">{{ errorMessages['driverId'] }}</small>
+                                  </div> 
+                            </div>
+                            <div class="col-md-6">
+                                <label for="conductor">Select Conductor</label>
+                                <select class="form-control" id="conductor" [(ngModel)]="busDto.conductorId" name="conductorId" required>
+                                    <option *ngFor="let conductor of conductorList" [value]="conductor.id">{{ conductor.name }}</option>
+                                </select>
+                                <div *ngIf="errorMessages['conductorId']" class="error">
+                                    <small class="text-danger">{{ errorMessages['conductorId'] }}</small>
+                                  </div> 
+                            </div>
+                        </div>
+  
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

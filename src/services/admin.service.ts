@@ -74,6 +74,12 @@ export class AdminService {
     return this.http.get<Busresponse[]>(`${this.baseUrl}/bus`,{headers});
   }
 
+  // Fetch Bus By Id
+  getBusById(id:number): Observable<Bus> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<Bus>(`${this.baseUrl}/bus/${id}`,{headers});
+  }
+
   //fetch all ticket
   getAllTicket():Observable<TicketResponse[]>{
     const headers = this.getAuthHeaders();
