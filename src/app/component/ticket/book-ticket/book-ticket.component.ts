@@ -136,4 +136,13 @@ export class BookTicketComponent {
       }
     });
   }
+
+  isBookingEnabled(): boolean {
+    // Check if at least one seat is selected and all passenger names are filled
+    return (
+      this.selectedSeatsArray.length > 0 && 
+      this.isAllPassengerNamesFilled()
+    );
+  }
+  
 }

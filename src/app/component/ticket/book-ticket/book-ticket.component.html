@@ -61,7 +61,7 @@
       <div *ngIf="message" class="alert alert-danger mt-3">{{ message }}</div>
 
       <!-- Book Ticket Button -->
-      <button class="btn btn-primary mt-3" (click)="bookTicket()">Book Ticket</button>
+      <button class="btn btn-primary mt-3" (click)="bookTicket()" [disabled]="!isBookingEnabled()">Book Ticket</button>
     </div>
   </div>
 </div>

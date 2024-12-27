@@ -73,7 +73,7 @@ export class SearchBusComponent {
     
     const [hours] = departureTime.split(':').map(Number);
     const isMorning = hours >= 5 && hours < 12;
-    const isNight = hours >= 18 || hours < 24;
+    const isNight = hours >= 18 && hours < 24;
 
     return (
       (this.selectedTimeOfDay === 'Morning' && isMorning) ||

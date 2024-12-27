@@ -86,6 +86,7 @@
                         <div class="col-md-4">
                             <label for="coachType">Choose Coach Type:</label><br>
                             <select id="coachType" [(ngModel)]="busDto.coach" name="coach" class="form-control">
+                              <option value="" disabled selected>-- Select Coach Type --</option>
                               <option value="AC">AC</option>
                               <option value="Non AC">Non AC</option>
                             </select>

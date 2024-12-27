@@ -76,7 +76,7 @@ loadConductors() {
     busDataWithoutId.conductorId = parseInt(busDataWithoutId.conductorId.toString(), 10);
 
     // Convert the departureTime to 12-hour format
-    busDataWithoutId.departureTime = this.convertTo12HourFormat(this.busDto.departureTime);
+    //busDataWithoutId.departureTime = this.convertTo12HourFormat(this.busDto.departureTime);
     console.log('Bus Without Id..',busDataWithoutId);
     this.service.createBus(busDataWithoutId).subscribe({
       next: (response) => {
