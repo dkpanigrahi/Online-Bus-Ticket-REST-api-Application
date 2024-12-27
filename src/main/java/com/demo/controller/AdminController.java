@@ -256,7 +256,8 @@ public class AdminController {
 	            bus.setSpecificDays(busDto.getSpecificDays());
 	        }
 	        
-	        busService.saveBus(bus);
+	        Bus newBus = busService.saveBus(bus);
+	        
 	        
 	        response.put("message", "Bus added successfully");
 	        return ResponseEntity.ok(response);

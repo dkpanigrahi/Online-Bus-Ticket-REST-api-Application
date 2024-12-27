@@ -14,8 +14,9 @@ public class BusService {
     @Autowired
     private BusRepository busRepository;
 
-    public void saveBus(Bus bus) {
-		busRepository.save(bus);		
+    public Bus saveBus(Bus bus) {
+		Bus newBus = busRepository.save(bus);
+		return newBus;
 	}
    
     public Bus getBusById(int busId) {

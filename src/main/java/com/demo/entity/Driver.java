@@ -17,6 +17,8 @@ public class Driver {
 	private String phoneNo;
 	
 	private String salary;
+	
+	
 
 	public int getId() {
 		return id;
@@ -49,6 +51,8 @@ public class Driver {
 	public void setSalary(String salary) {
 		this.salary = salary;
 	}
+
+
 
 	
 }
